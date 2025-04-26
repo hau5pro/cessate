@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #121212;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background 1 ease;
+}
+
+.timer-display {
+  font-size: 48px;
+  margin: 40px;
+}
+
+.input-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.time-input {
+  font-size: 18px;
+  padding: 5px;
+  width: 80px;
+  text-align: center;
+  margin: 0 5px;
+}
+
+.label {
+  font-size: 24px;
+  margin: 0 5px;
+}
+
+.timer-button {
+  font-size: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #1f1f1f;
+  color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.timer-button:hover {
+  background-color: #333;
+}
+
+/* Default background */
+.default-bg {
+  background: linear-gradient(to top, #121212, #333333);
+}
+
+/* Active timer background (orange gradient) */
+.active-timer-bg {
+  background: linear-gradient(to top, #4e1f00, #ff5500);
+}
+
+/* Timer done background (green gradient) */
+.done-timer-bg {
+  background: linear-gradient(to top, #66ff66, #33cc33);
+}
