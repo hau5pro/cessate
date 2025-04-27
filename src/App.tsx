@@ -22,8 +22,42 @@ function App() {
   const [historyVisible, setHistoryVisible] = useState<boolean>(false); // Track visibility of history modal
   const [history, setHistory] = useState<BreakEntry[]>([]); // Store break history
   const timerRef = useRef<number | null>(null);
-
   const historyContentRef = useRef<HTMLDivElement | null>(null);
+
+  // Calculate hours, minutes, and seconds from secondsLeft
+  const hrs = Math.floor(secondsLeft / 3600);
+  const mins = Math.floor((secondsLeft % 3600) / 60);
+  const secs = secondsLeft % 60;
+
+  const targetDurationInSeconds = (hours * 60 + minutes) * 60;
+
+  let normalizedPercentage = 0; // Default to 0 if no endTime
+
+  if (endTime) {
+    const elapsedTimeInSeconds = (endTime - Date.now()) / 1000;
+    normalizedPercentage = Math.max(
+      0,
+      Math.min(1, elapsedTimeInSeconds / targetDurationInSeconds)
+    );
+  }
+
+  // Determine the background color based on the timer state
+  let backgroundClass = "default-bg";
+  if (endTime && !timerDone) {
+    backgroundClass = "active-timer-bg";
+  }
+
+  const emoji = endTime && !timerDone ? "🚭" : "🚬";
+
+  // Group the history by day
+  const groupedHistory = history.reduce((groups, entry) => {
+    const dateKey = entry.date;
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].push(entry);
+    return groups;
+  }, {} as { [key: string]: BreakEntry[] });
 
   useEffect(() => {
     if (!endTime) return;
@@ -38,9 +72,9 @@ function App() {
       );
       setSecondsLeft(newSecondsLeft);
 
-      if (newSecondsLeft === 0) {
+      if (newSecondsLeft === 0 && !timerDone) {
         if (timerRef.current) clearInterval(timerRef.current);
-        setTimerDone(true); // Set timer done after reaching 0
+        setTimerDone(true); // Mark timer as done
 
         // Trigger mobile vibration
         if (navigator.vibrate) {
@@ -52,13 +86,18 @@ function App() {
         const startTime = endTime - targetDuration;
 
         saveBreakHistory(startTime, actualDuration, targetDuration);
+
+        // Reset the timer automatically after saving the history
+        setEndTime(null);
+        setTimerDone(false);
+        setSecondsLeft(0);
       }
     }, 1000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [endTime]);
+  }, [endTime, timerDone, hours, minutes]);
 
   useEffect(() => {
     if (historyVisible && historyContentRef.current) {
@@ -122,26 +161,30 @@ function App() {
 
     const currentTime = Date.now();
 
-    if (endTime) {
-      // Calculate elapsed time based on the difference from the start time
-      const startTime = endTime - (hours * 60 + minutes) * 60 * 1000; // When the timer started
-      const elapsedTime = currentTime - startTime; // Elapsed time is the difference between current time and start time
-
+    if (endTime && !timerDone) {
+      // Timer is currently running, but the user clicked "reset"
+      // Save the break history before resetting
+      const elapsedTime =
+        currentTime - (endTime - (hours * 60 + minutes) * 60 * 1000); // Time elapsed since timer started
       const actualDuration = elapsedTime;
       const targetDuration = (hours * 60 + minutes) * 60 * 1000;
 
       // Save the break history with the actual elapsed time
-      saveBreakHistory(startTime, actualDuration, targetDuration);
+      saveBreakHistory(
+        endTime - targetDuration,
+        actualDuration,
+        targetDuration
+      );
 
       // Reset the timer states
       setEndTime(null);
       setTimerDone(false);
       setSecondsLeft(0);
     } else {
-      // Timer is being started
+      // Timer is being started or reset after completion
       const totalMilliseconds = (hours * 60 + minutes) * 60 * 1000;
       setEndTime(currentTime + totalMilliseconds);
-      setTimerDone(false);
+      setTimerDone(false); // Reset timerDone flag
       setSecondsLeft(totalMilliseconds / 1000); // Convert back to seconds for the state
     }
   };
@@ -209,41 +252,6 @@ function App() {
 
     return `rgb(${r},${g},${b})`;
   };
-
-  // Calculate hours, minutes, and seconds from secondsLeft
-  const hrs = Math.floor(secondsLeft / 3600);
-  const mins = Math.floor((secondsLeft % 3600) / 60);
-  const secs = secondsLeft % 60;
-
-  const targetDurationInSeconds = (hours * 60 + minutes) * 60;
-
-  let normalizedPercentage = 0; // Default to 0 if no endTime
-
-  if (endTime) {
-    const elapsedTimeInSeconds = (endTime - Date.now()) / 1000;
-    normalizedPercentage = Math.max(
-      0,
-      Math.min(1, elapsedTimeInSeconds / targetDurationInSeconds)
-    );
-  }
-
-  // Determine the background color based on the timer state
-  let backgroundClass = "default-bg";
-  if (endTime && !timerDone) {
-    backgroundClass = "active-timer-bg";
-  }
-
-  const emoji = endTime && !timerDone ? "🚭" : "🚬";
-
-  // Group the history by day
-  const groupedHistory = history.reduce((groups, entry) => {
-    const dateKey = entry.date;
-    if (!groups[dateKey]) {
-      groups[dateKey] = [];
-    }
-    groups[dateKey].push(entry);
-    return groups;
-  }, {} as { [key: string]: BreakEntry[] });
 
   return (
     <div className={`container ${backgroundClass}`}>
