@@ -18,7 +18,7 @@ export default defineConfig({
         background_color: "#3c2d96",
         theme_color: "#000000",
         icons: [192, 256, 384, 512].map((x) => ({
-          src: `/cessate/icon.svg`,
+          src: `/cessate.svg`,
           sizes: `${x}x${x}`,
           type: "image/svg+xml",
           purpose: "any",
