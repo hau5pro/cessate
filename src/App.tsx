@@ -96,6 +96,12 @@ function App() {
     setHistory(storedHistory);
   };
 
+  const clearHistory = () => {
+    // Clear history from state and localStorage
+    localStorage.removeItem("breakHistory");
+    setHistory([]); // Clear the history state
+  };
+
   const toggleTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -218,7 +224,13 @@ function App() {
       {/* History Modal */}
       {historyVisible && (
         <div className="history-modal">
-          <h2>Break History</h2>
+          <div className="modal-header">
+            <h2>Break History</h2>
+            <button className="clear-history-button" onClick={clearHistory}>
+              🧹
+            </button>
+          </div>
+
           {/* Iterate through grouped history by day */}
           <div className="history-content" ref={historyContentRef}>
             {Object.entries(groupedHistory).map(([date, entries]) => (
@@ -246,6 +258,7 @@ function App() {
               </div>
             ))}
           </div>
+
           <button className="close-modal" onClick={toggleHistoryModal}>
             Dismiss
           </button>
