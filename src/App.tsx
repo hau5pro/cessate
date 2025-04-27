@@ -216,7 +216,7 @@ function App() {
 
           {/* History icon */}
           <button className="history-icon" onClick={toggleHistoryModal}>
-            📜
+            <span>📜</span>
           </button>
         </div>
 
@@ -230,7 +230,7 @@ function App() {
 
       <div className={`history-modal ${historyVisible ? "open" : ""}`}>
         <div className="modal-header">
-          <h2>Break History</h2>
+          <h2>History</h2>
           <button className="clear-history-button" onClick={clearHistory}>
             🧹
           </button>

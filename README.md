@@ -1,6 +1,6 @@
 # Cessate
 
-A habit cessation tool.
+A habit cessation tool. A vibe coding experiment.
 
 # React + TypeScript + Vite
 

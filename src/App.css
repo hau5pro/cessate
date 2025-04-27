@@ -43,6 +43,7 @@ h1 {
 
 button {
   font-family: 'Roboto', sans-serif;
+  border-radius: 5px;
 }
 
 button:focus {
@@ -58,7 +59,7 @@ button:focus {
 .input-group {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 25px;
   margin-bottom: 20px;
 }
 
@@ -73,6 +74,7 @@ input[type="number"] {
   -moz-appearance: textfield;
   appearance: none;
 
+  margin: 0;
   font-family: 'Inconsolata', monospace;
   border: solid 1px white;
   outline: none;
@@ -101,7 +103,6 @@ input[type="number"] {
   text-transform: uppercase;
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   color: #ffffff;
   transition: background-color 0.3s;
@@ -141,21 +142,21 @@ input[type="number"] {
 
 /* Styles for the History Icon Button */
 .history-icon {
-  background-color: transparent;
+  background-color: white;
   border: none;
   max-height: fit-content;
-  font-size: 20px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
-.history-icon:hover {
+.history-icon > span {
+  font-size: 24px;
+}
+
+.history-icon > span:hover {
   transform: scale(1.2);
 }
 
-.history-icon:focus {
-  outline: none;
-}
 
 /* History Modal Styles */
 .history-modal {
@@ -192,6 +193,7 @@ input[type="number"] {
   gap: 1rem;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 /* Flexbox layout for grouped history entries */
