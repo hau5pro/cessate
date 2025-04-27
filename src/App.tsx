@@ -41,12 +41,6 @@ function App() {
     );
   }
 
-  // Determine the background color based on the timer state
-  let backgroundClass = "default-bg";
-  if (endTime && !timerDone) {
-    backgroundClass = "active-timer-bg";
-  }
-
   const emoji = endTime && !timerDone ? "🚭" : "🚬";
 
   // Group the history by day
@@ -262,7 +256,7 @@ function App() {
   };
 
   return (
-    <div className={`container ${backgroundClass}`}>
+    <div className={`container default-bg`}>
       <div className="content">
         <h1>Cessate</h1>
         <span className="emoji">{emoji}</span>

@@ -124,20 +124,14 @@ input[type="number"] {
 }
 
 .reset {
-  background-color: #2196F3;
+  background-color: #ff5c5c;
 }
 .reset:hover {
-  background-color:  #72bbf7,;
+  background-color:  #ff2a2a,;
 }
 
-/* Default background */
 .default-bg {
   background: linear-gradient(to top, #010f2a, #3c2d96);
-}
-
-/* Active timer background (orange gradient) */
-.active-timer-bg {
-  background: linear-gradient(to top, #2e1200, #eb3209);
 }
 
 .emoji {
