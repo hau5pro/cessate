@@ -35,15 +35,25 @@ body {
   }
 }
 
+h1, h2 {
+  font-family: 'Chewy', sans-serif;
+}
+
 h1 {
-  font-family: 'Roboto', sans-serif;
   font-size: 64px;
   margin: 5px;
 }
 
 button {
   font-family: 'Roboto', sans-serif;
+  font-weight: 600;
   border-radius: 5px;
+  border: none;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #ffffff;
 }
 
 button:focus {
@@ -98,13 +108,7 @@ input[type="number"] {
 }
 
 .timer-button {
-  font-size: 28px;
-  font-weight: 700;
-  text-transform: uppercase;
   padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  color: #ffffff;
   transition: background-color 0.3s;
 }
 
@@ -142,6 +146,7 @@ input[type="number"] {
 
 /* Styles for the History Icon Button */
 .history-icon {
+  font-size: unset;
   background-color: white;
   border: none;
   max-height: fit-content;
@@ -182,7 +187,6 @@ input[type="number"] {
 }
 
 .history-modal h2 {
-  font-family: 'Roboto', sans-serif;
   font-size: 2.5rem;
   text-align: center;
   margin: 1rem 0;
