@@ -6,6 +6,7 @@ interface BreakEntry {
   startTime: number;
   endTime: number;
   duration: number;
+  targetDuration: number;
   date: string; // Date when the break started
 }
 
@@ -44,8 +45,9 @@ function App() {
 
         // Save break history when timer is done
         saveBreakHistory(
-          Date.now() - newSecondsLeft * 1000,
-          newSecondsLeft * 1000
+          endTime - (hours * 60 + minutes) * 60 * 1000,
+          (hours * 60 + minutes) * 60 * 1000,
+          (hours * 60 + minutes) * 60 * 1000
         );
       }
     }, 1000);
@@ -62,11 +64,16 @@ function App() {
     }
   }, [historyVisible]);
 
-  const saveBreakHistory = (startTime: number, duration: number): void => {
+  const saveBreakHistory = (
+    startTime: number,
+    duration: number,
+    targetDuration: number
+  ): void => {
     const newEntry: BreakEntry = {
       startTime,
       endTime: startTime + duration,
       duration,
+      targetDuration,
       date: new Date(startTime).toLocaleDateString(),
     };
 
@@ -110,7 +117,11 @@ function App() {
       const elapsedTime = Date.now() - (endTime - secondsLeft * 1000); // Elapsed time in milliseconds
 
       // Save the break history with the actual elapsed time
-      saveBreakHistory(Date.now() - elapsedTime, elapsedTime);
+      saveBreakHistory(
+        Date.now() - elapsedTime,
+        elapsedTime,
+        (hours * 60 + minutes) * 60 * 1000
+      );
 
       // Reset the timer states
       setEndTime(null);
@@ -149,6 +160,44 @@ function App() {
       setHistoryVisible(true);
       loadBreakHistory(); // Load history when modal is opened
     }
+  };
+
+  const interpolateColor = (actualSeconds: number, targetSeconds: number) => {
+    const percentage = targetSeconds === 0 ? 0 : actualSeconds / targetSeconds;
+    console.log(actualSeconds, targetSeconds, percentage);
+
+    const colors = [
+      { pct: 0.0, color: { r: 255, g: 107, b: 107 } }, // Red
+      { pct: 0.1, color: { r: 255, g: 140, b: 71 } }, // Orangey
+      { pct: 0.5, color: { r: 255, g: 179, b: 71 } }, // Amber
+      { pct: 1.0, color: { r: 107, g: 203, b: 119 } }, // Green
+    ];
+
+    let lower = colors[0];
+    let upper = colors[colors.length - 1];
+
+    for (let i = 1; i < colors.length; i++) {
+      if (percentage < colors[i].pct) {
+        upper = colors[i];
+        lower = colors[i - 1];
+        break;
+      }
+    }
+
+    const range = upper.pct - lower.pct;
+    const rangePct = range === 0 ? 0 : (percentage - lower.pct) / range;
+
+    const r = Math.round(
+      lower.color.r + (upper.color.r - lower.color.r) * rangePct
+    );
+    const g = Math.round(
+      lower.color.g + (upper.color.g - lower.color.g) * rangePct
+    );
+    const b = Math.round(
+      lower.color.b + (upper.color.b - lower.color.b) * rangePct
+    );
+
+    return `rgb(${r},${g},${b})`;
   };
 
   // Calculate hours, minutes, and seconds from secondsLeft
@@ -258,7 +307,21 @@ function App() {
                       </span>
                       <span className="entry">
                         <span className="history-item-label">Duration</span>{" "}
-                        {Math.floor(entry.duration / 60000)} minutes
+                        <span
+                          style={{
+                            color: interpolateColor(
+                              Math.floor(entry.duration / 1000),
+                              Math.floor(entry.targetDuration / 1000)
+                            ),
+                          }}
+                        >
+                          {Math.floor(entry.duration / 60000)} minutes
+                          {" ("}
+                          {Math.floor(
+                            (entry.duration / entry.targetDuration) * 100
+                          )}
+                          {"%)"}
+                        </span>
                       </span>
                     </div>
                   ))}
