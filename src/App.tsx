@@ -138,10 +138,17 @@ function App() {
 
   // Handle the visibility of the history modal
   const toggleHistoryModal = () => {
-    if (!historyVisible) {
+    if (historyVisible) {
+      // Add the closing class to trigger the slide-up animation
+      document.body.classList.add("history-closing");
+      setTimeout(() => {
+        setHistoryVisible(false);
+        document.body.classList.remove("history-closing");
+      }, 500); // Delay should match the duration of the slide-out animation
+    } else {
+      setHistoryVisible(true);
       loadBreakHistory(); // Load history when modal is opened
     }
-    setHistoryVisible(!historyVisible);
   };
 
   // Calculate hours, minutes, and seconds from secondsLeft
@@ -221,53 +228,50 @@ function App() {
         </button>
       </div>
 
-      {/* History Modal */}
-      {historyVisible && (
-        <div className="history-modal">
-          <div className="modal-header">
-            <h2>Break History</h2>
-            <button className="clear-history-button" onClick={clearHistory}>
-              🧹
-            </button>
-          </div>
-
-          {/* Iterate through grouped history by day */}
-          <div className="history-content" ref={historyContentRef}>
-            {Object.entries(groupedHistory).length === 0 ? (
-              <div className="no-data-message">No history available.</div>
-            ) : (
-              Object.entries(groupedHistory).map(([date, entries]) => (
-                <div key={date} className="day-entry">
-                  <div className="date">
-                    {date} - {entries.length} Sessions
-                  </div>
-                  <div className="history-items">
-                    {entries.map((entry, idx) => (
-                      <div key={idx} className="history-item">
-                        <span className="entry">
-                          <span className="history-item-label">Start</span>{" "}
-                          {new Date(entry.startTime).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
-                        <span className="entry">
-                          <span className="history-item-label">Duration</span>{" "}
-                          {Math.floor(entry.duration / 60000)} minutes
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          <button className="close-modal" onClick={toggleHistoryModal}>
-            Dismiss
+      <div className={`history-modal ${historyVisible ? "open" : ""}`}>
+        <div className="modal-header">
+          <h2>Break History</h2>
+          <button className="clear-history-button" onClick={clearHistory}>
+            🧹
           </button>
         </div>
-      )}
+
+        {/* Iterate through grouped history by day */}
+        <div className="history-content" ref={historyContentRef}>
+          {Object.entries(groupedHistory).length === 0 ? (
+            <div className="no-data-message">No history available.</div>
+          ) : (
+            Object.entries(groupedHistory).map(([date, entries]) => (
+              <div key={date} className="day-entry">
+                <div className="date">
+                  {date} - {entries.length} Sessions
+                </div>
+                <div className="history-items">
+                  {entries.map((entry, idx) => (
+                    <div key={idx} className="history-item">
+                      <span className="entry">
+                        <span className="history-item-label">Start</span>{" "}
+                        {new Date(entry.startTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      <span className="entry">
+                        <span className="history-item-label">Duration</span>{" "}
+                        {Math.floor(entry.duration / 60000)} minutes
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <button className="close-modal" onClick={toggleHistoryModal}>
+          Dismiss
+        </button>
+      </div>
     </div>
   );
 }

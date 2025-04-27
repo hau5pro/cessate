@@ -45,6 +45,10 @@ button {
   font-family: 'Roboto', sans-serif;
 }
 
+button:focus {
+  outline: none;
+}
+
 .timer-display {
   font-family: 'Inconsolata', monospace;
   font-size: 64px;
@@ -168,6 +172,12 @@ input[type="number"] {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-100%);
+}
+
+.history-modal.open {
+  transform: translateY(0);
 }
 
 .history-modal h2 {
@@ -272,10 +282,6 @@ input[type="number"] {
 
 .clear-history-button:hover {
   background-color: #ff5c5c;
-}
-
-.clear-history-button:focus {
-  outline: none;
 }
 
 .no-data-message {
