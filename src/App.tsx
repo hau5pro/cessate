@@ -3,8 +3,8 @@ import "./App.css";
 import { useEffect, useRef, useState } from "react";
 
 function App() {
-  const [hours, setHours] = useState<number>(0);
-  const [minutes, setMinutes] = useState<number>(30);
+  const [hours, setHours] = useState<number>(2);
+  const [minutes, setMinutes] = useState<number>(0);
   const [endTime, setEndTime] = useState<number | null>(null);
   const [secondsLeft, setSecondsLeft] = useState<number>(0);
   const [timerDone, setTimerDone] = useState<boolean>(false);
@@ -38,9 +38,14 @@ function App() {
 
   function startTimer() {
     if (timerRef.current) clearInterval(timerRef.current);
-    const totalMilliseconds = (hours * 60 + minutes) * 60 * 1000;
-    setEndTime(Date.now() + totalMilliseconds);
-    setTimerDone(false); // Reset the "done" state
+    if (endTime) {
+      setEndTime(null); // Reset the timer if already running
+      setTimerDone(false); // Reset the "done" state
+    } else {
+      const totalMilliseconds = (hours * 60 + minutes) * 60 * 1000;
+      setEndTime(Date.now() + totalMilliseconds);
+      setTimerDone(false); // Reset the "done" state
+    }
   }
 
   // Calculate hours, minutes, and seconds from secondsLeft
@@ -52,13 +57,16 @@ function App() {
   let backgroundClass = "default-bg";
   if (endTime && !timerDone) {
     backgroundClass = "active-timer-bg"; // Active timer (orange)
-  } else if (timerDone) {
-    backgroundClass = "done-timer-bg"; // Timer done (green)
   }
+
+  // Conditional emoji based on timer state
+  const emoji = endTime && !timerDone ? "🚭" : "🚬";
 
   return (
     <div className={`container ${backgroundClass}`}>
       <h1>Cessate</h1>
+
+      <span className="emoji">{emoji}</span>
 
       <div className="timer-display">
         {`${hrs.toString().padStart(2, "0")}:${mins
@@ -67,29 +75,37 @@ function App() {
       </div>
 
       <div className="input-group">
-        <input
-          type="number"
-          value={hours}
-          min={0}
-          onChange={(e) => setHours(Number(e.target.value))}
-          className="time-input"
-          placeholder="Hours"
-        />
-        <span className="label">H</span>
-
-        <input
-          type="number"
-          value={minutes}
-          min={0}
-          onChange={(e) => setMinutes(Number(e.target.value))}
-          className="time-input"
-          placeholder="Minutes"
-        />
-        <span className="label">M</span>
+        <div className="input">
+          <input
+            type="number"
+            value={hours}
+            min={0}
+            max={99}
+            onChange={(e) => setHours(Number(e.target.value))}
+            className="time-input"
+            placeholder="Hours"
+          />
+          <span className="label">Hours</span>
+        </div>
+        <div className="input">
+          <input
+            type="number"
+            value={minutes}
+            min={0}
+            max={59}
+            onChange={(e) => setMinutes(Number(e.target.value))}
+            className="time-input"
+            placeholder="Minutes"
+          />
+          <span className="label">Minutes</span>
+        </div>
       </div>
 
-      <button onClick={startTimer} className="timer-button">
-        Start
+      <button
+        onClick={startTimer}
+        className={endTime ? "timer-button reset" : "timer-button start"}
+      >
+        {endTime ? "Reset" : "Start"}
       </button>
     </div>
   );

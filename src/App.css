@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Inconsolata', monospace;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -9,7 +9,9 @@ body {
 }
 
 h1 {
-  font-size: 48px;
+  font-family: 'Dynapuff', cursive;
+  font-size: 64px;
+  margin: 5px;
 }
 
 .container {
@@ -26,56 +28,89 @@ h1 {
 }
 
 .timer-display {
-  font-size: 48px;
-  margin: 40px;
+  font-family: 'Inconsolata', monospace;
+  font-size: 64px;
+  margin: 30px 20px 60px 20px;
 }
 
 .input-group {
   display: flex;
   justify-content: center;
-  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.time-input {
-  font-size: 18px;
-  padding: 5px;
-  width: 80px;
+.input { 
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Reset default input styles */
+input[type="number"] {
+  -webkit-appearance: none; /* Remove default number input appearance in Webkit browsers (e.g., Chrome, Safari) */
+  -moz-appearance: textfield; /* Remove number input appearance in Firefox */
+  appearance: none; /* Remove input appearance in general */
+
+  font-family: 'Inconsolata', monospace;
+  border: solid 1px white;
+  outline: none; 
+  background-color: transparent; 
+  padding: 10px;
+  font-size: 28px;
   text-align: center;
-  margin: 0 5px;
+  border-radius: 5px;
+  box-shadow: none;
+}
+
+.time-input {
+  width: 60px; /* Set width */
+  margin: 0 5px; /* Spacing between inputs */
 }
 
 .label {
-  font-size: 24px;
-  margin: 0 5px;
+  text-align: start;
+  font-size: 12px;
+  margin-left: 15px;
 }
 
 .timer-button {
-  font-size: 20px;
+  font-family: 'Dynapuff', cursive;
+  font-size: 22px;
+  font-weight: bolder;
+  text-transform: uppercase;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #1f1f1f;
   color: #ffffff;
   transition: background-color 0.3s;
 }
 
-.timer-button:hover {
-  background-color: #333;
+.start {
+  background-color: #ffa007;
+}
+.start:hover {
+  background-color: #ffb428;
+}
+
+.reset {
+  background-color: #2196F3;
+}
+.reset:hover {
+  background-color:  #72bbf7,;
 }
 
 /* Default background */
 .default-bg {
-  background: linear-gradient(to top, #121212, #333333);
+  background: linear-gradient(to top, #010f2a, #3c2d96);
 }
 
 /* Active timer background (orange gradient) */
 .active-timer-bg {
-  background: linear-gradient(to top, #4e1f00, #ff5500);
+  background: linear-gradient(to top, #2e1200, #eb3209);
 }
 
-/* Timer done background (green gradient) */
-.done-timer-bg {
-  background: linear-gradient(to top, #66ff66, #33cc33);
+.emoji {
+  font-size: 36px;
 }
