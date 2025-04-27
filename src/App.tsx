@@ -252,6 +252,15 @@ function App() {
     return `rgb(${r},${g},${b})`;
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   return (
     <div className={`container ${backgroundClass}`}>
       <div className="content">
@@ -307,7 +316,7 @@ function App() {
           onClick={toggleTimer}
           className={endTime ? "timer-button reset" : "timer-button start"}
         >
-          {endTime ? "Reset" : "Start"}
+          {endTime ? "Relapse" : "Start"}
         </button>
       </div>
 
@@ -327,7 +336,7 @@ function App() {
             Object.entries(groupedHistory).map(([date, entries]) => (
               <div key={date} className="day-entry">
                 <div className="date">
-                  {date} - {entries.length} Sessions
+                  {formatDate(date)} - {entries.length} Sessions
                 </div>
                 <div className="history-items">
                   {entries.map((entry, idx) => (
