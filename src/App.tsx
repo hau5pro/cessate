@@ -36,7 +36,7 @@ function App() {
     };
   }, [endTime]);
 
-  function startTimer() {
+  function toggleTimer() {
     if (timerRef.current) clearInterval(timerRef.current);
     if (endTime) {
       setEndTime(null); // Reset the timer if already running
@@ -49,6 +49,18 @@ function App() {
       setSecondsLeft(totalMilliseconds / 1000); // Start with the total time in seconds
     }
   }
+
+  // Ensure hours are within the range [0, 99]
+  const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(99, Math.max(0, Number(e.target.value)));
+    setHours(value);
+  };
+
+  // Ensure minutes are within the range [0, 59]
+  const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(59, Math.max(0, Number(e.target.value)));
+    setMinutes(value);
+  };
 
   // Calculate hours, minutes, and seconds from secondsLeft
   const hrs = Math.floor(secondsLeft / 3600);
@@ -83,7 +95,7 @@ function App() {
             value={hours}
             min={0}
             max={99}
-            onChange={(e) => setHours(Number(e.target.value))}
+            onChange={handleHoursChange}
             className="time-input"
             placeholder="Hours"
           />
@@ -95,7 +107,7 @@ function App() {
             value={minutes}
             min={0}
             max={59}
-            onChange={(e) => setMinutes(Number(e.target.value))}
+            onChange={handleMinutesChange}
             className="time-input"
             placeholder="Minutes"
           />
@@ -104,7 +116,7 @@ function App() {
       </div>
 
       <button
-        onClick={startTimer}
+        onClick={toggleTimer}
         className={endTime ? "timer-button reset" : "timer-button start"}
       >
         {endTime ? "Reset" : "Start"}
