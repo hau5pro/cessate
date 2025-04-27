@@ -1,7 +1,7 @@
 {
   "name": "cessate",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@noble/hashes": "^1.8.0",
+    "@types/node": "^22.15.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
