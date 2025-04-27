@@ -41,10 +41,12 @@ function App() {
     if (endTime) {
       setEndTime(null); // Reset the timer if already running
       setTimerDone(false); // Reset the "done" state
+      setSecondsLeft(0); // Reset the seconds left when timer is reset
     } else {
       const totalMilliseconds = (hours * 60 + minutes) * 60 * 1000;
       setEndTime(Date.now() + totalMilliseconds);
       setTimerDone(false); // Reset the "done" state
+      setSecondsLeft(totalMilliseconds / 1000); // Start with the total time in seconds
     }
   }
 
