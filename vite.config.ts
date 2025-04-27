@@ -17,12 +17,20 @@ export default defineConfig({
         display: "standalone",
         background_color: "#3c2d96",
         theme_color: "#000000",
-        icons: [192, 256, 384, 512].map((x) => ({
-          src: `/cessate.svg`,
-          sizes: `${x}x${x}`,
-          type: "image/svg+xml",
-          purpose: "any",
-        })),
+        icons: [
+          {
+            src: "public/192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "public/512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any",
+          },
+        ],
       },
     }),
   ],
