@@ -216,7 +216,6 @@ function App() {
   };
 
   const interpolateColor = (percentage: number) => {
-    console.log("percentage ", percentage);
     // Ensure percentage is between 0 and 1
     percentage = Math.max(0, Math.min(1, percentage));
 
@@ -349,7 +348,10 @@ function App() {
                             color: entry.color,
                           }}
                         >
-                          {Math.floor(entry.duration / 60000)} min
+                          {Math.floor(entry.duration / 60000)}
+                          {" / "}
+                          {Math.floor(entry.targetDuration / 60000)}
+                          {" min"}
                           {" ("}
                           {Math.floor(
                             (entry.duration / entry.targetDuration) * 100
