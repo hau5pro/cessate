@@ -9,7 +9,7 @@ body {
 }
 
 h1 {
-  font-family: 'Dynapuff', cursive;
+  font-family: 'Dynapuff', sans-serif;
   font-size: 64px;
   margin: 5px;
 }
@@ -75,7 +75,7 @@ input[type="number"] {
 }
 
 .timer-button {
-  font-family: 'Dynapuff', cursive;
+  font-family: 'Dynapuff', sans-serif;
   font-size: 22px;
   font-weight: bolder;
   text-transform: uppercase;
