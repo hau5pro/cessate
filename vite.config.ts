@@ -14,7 +14,7 @@ export default defineConfig({
         short_name: "Cessate",
         description: "A habit cessation tool",
         start_url: "/",
-        display: "standalone",
+        // display: "standalone",
         background_color: "#3c2d96",
         theme_color: "#ffffff",
         icons: [

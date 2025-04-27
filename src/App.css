@@ -21,7 +21,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: 10px;
   text-align: center;
   padding: 20px;
@@ -98,6 +97,10 @@ input[type="number"] {
   cursor: pointer;
   color: #ffffff;
   transition: background-color 0.3s;
+}
+
+.timer-button:focus {
+  outline: none;
 }
 
 .start {

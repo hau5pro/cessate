@@ -93,6 +93,7 @@ function App() {
           <div className="input">
             <input
               type="number"
+              inputMode="numeric"
               value={hours}
               min={0}
               max={99}
@@ -105,6 +106,7 @@ function App() {
           <div className="input">
             <input
               type="number"
+              inputMode="numeric"
               value={minutes}
               min={0}
               max={59}
