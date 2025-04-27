@@ -13,7 +13,7 @@ export default defineConfig({
         name: "Cessate",
         short_name: "Cessate",
         description: "A habit cessation tool",
-        start_url: "/",
+        start_url: "https://hau5pro.github.io/cessate/",
         // display: "standalone",
         background_color: "#3c2d96",
         theme_color: "#ffffff",
