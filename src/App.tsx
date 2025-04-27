@@ -316,7 +316,13 @@ function App() {
           onClick={toggleTimer}
           className={endTime ? "timer-button reset" : "timer-button start"}
         >
-          {endTime ? "Relapse" : "Start"}
+          {endTime ? (
+            <span>
+              R<span className="mirror">e</span>lapse
+            </span>
+          ) : (
+            "Start"
+          )}
         </button>
       </div>
 

@@ -264,6 +264,11 @@ input[type="number"] {
   margin-left: auto;
 }
 
+.mirror {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
 .close-modal {
   background-color: #ff5c5c;
   color: white;
