@@ -1,30 +1,45 @@
-body {
+html, body {
+  height: 100%;
   margin: 0;
+}
+
+body {
   font-family: 'Inconsolata', monospace;
-  height: 100vh;
+  background-color: #121212;
+  overflow: hidden;
+}
+
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #121212;
+  width: 100vw;
+  height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 20px;
+  max-width: 500px;
+  height: auto;
+  transition: background 1s ease;
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 10px;
+  }
 }
 
 h1 {
   font-family: 'Roboto', sans-serif;
   font-size: 64px;
   margin: 5px;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: center;
-  padding: 20px;
-  width: 90%;
-  max-width: 400px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background 1 ease;
 }
 
 .timer-display {
@@ -46,16 +61,15 @@ h1 {
   gap: 2px;
 }
 
-/* Reset default input styles */
 input[type="number"] {
-  -webkit-appearance: none; /* Remove default number input appearance in Webkit browsers (e.g., Chrome, Safari) */
-  -moz-appearance: textfield; /* Remove number input appearance in Firefox */
-  appearance: none; /* Remove input appearance in general */
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
 
   font-family: 'Inconsolata', monospace;
   border: solid 1px white;
-  outline: none; 
-  background-color: transparent; 
+  outline: none;
+  background-color: transparent;
   padding: 10px;
   font-size: 28px;
   text-align: center;
@@ -64,8 +78,8 @@ input[type="number"] {
 }
 
 .time-input {
-  width: 60px; /* Set width */
-  margin: 0 5px; /* Spacing between inputs */
+  width: 60px;
+  margin: 0 5px;
 }
 
 .label {

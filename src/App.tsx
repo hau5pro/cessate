@@ -78,49 +78,51 @@ function App() {
 
   return (
     <div className={`container ${backgroundClass}`}>
-      <h1>Cessate</h1>
+      <div className="content">
+        <h1>Cessate</h1>
 
-      <span className="emoji">{emoji}</span>
+        <span className="emoji">{emoji}</span>
 
-      <div className="timer-display">
-        {`${hrs.toString().padStart(2, "0")}:${mins
-          .toString()
-          .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`}
-      </div>
-
-      <div className="input-group">
-        <div className="input">
-          <input
-            type="number"
-            value={hours}
-            min={0}
-            max={99}
-            onChange={handleHoursChange}
-            className="time-input"
-            placeholder="Hours"
-          />
-          <span className="label">Hours</span>
+        <div className="timer-display">
+          {`${hrs.toString().padStart(2, "0")}:${mins
+            .toString()
+            .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`}
         </div>
-        <div className="input">
-          <input
-            type="number"
-            value={minutes}
-            min={0}
-            max={59}
-            onChange={handleMinutesChange}
-            className="time-input"
-            placeholder="Minutes"
-          />
-          <span className="label">Minutes</span>
-        </div>
-      </div>
 
-      <button
-        onClick={toggleTimer}
-        className={endTime ? "timer-button reset" : "timer-button start"}
-      >
-        {endTime ? "Reset" : "Start"}
-      </button>
+        <div className="input-group">
+          <div className="input">
+            <input
+              type="number"
+              value={hours}
+              min={0}
+              max={99}
+              onChange={handleHoursChange}
+              className="time-input"
+              placeholder="Hours"
+            />
+            <span className="label">Hours</span>
+          </div>
+          <div className="input">
+            <input
+              type="number"
+              value={minutes}
+              min={0}
+              max={59}
+              onChange={handleMinutesChange}
+              className="time-input"
+              placeholder="Minutes"
+            />
+            <span className="label">Minutes</span>
+          </div>
+        </div>
+
+        <button
+          onClick={toggleTimer}
+          className={endTime ? "timer-button reset" : "timer-button start"}
+        >
+          {endTime ? "Reset" : "Start"}
+        </button>
+      </div>
     </div>
   );
 }
