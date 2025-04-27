@@ -260,6 +260,10 @@ input[type="number"] {
   border-radius: 0.25rem;
 }
 
+.duration-label {
+  margin-left: auto;
+}
+
 .close-modal {
   background-color: #ff5c5c;
   color: white;

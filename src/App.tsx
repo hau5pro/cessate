@@ -8,6 +8,7 @@ interface BreakEntry {
   duration: number;
   targetDuration: number;
   date: string; // Date when the break started
+  color: string;
 }
 
 const MAX_HISTORY_DAYS = 7;
@@ -27,6 +28,9 @@ function App() {
   useEffect(() => {
     if (!endTime) return;
 
+    // Define targetDuration before using it
+    const targetDuration = (hours * 60 + minutes) * 60 * 1000;
+
     timerRef.current = window.setInterval(() => {
       const newSecondsLeft = Math.max(
         Math.round((endTime - Date.now()) / 1000),
@@ -43,12 +47,11 @@ function App() {
           navigator.vibrate([300, 100, 300]);
         }
 
-        // Save break history when timer is done
-        saveBreakHistory(
-          endTime - (hours * 60 + minutes) * 60 * 1000,
-          (hours * 60 + minutes) * 60 * 1000,
-          (hours * 60 + minutes) * 60 * 1000
-        );
+        // Calculate the actual duration before calling saveBreakHistory
+        const actualDuration = targetDuration - newSecondsLeft * 1000; // corrected here
+        const startTime = endTime - targetDuration;
+
+        saveBreakHistory(startTime, actualDuration, targetDuration);
       }
     }, 1000);
 
@@ -69,12 +72,17 @@ function App() {
     duration: number,
     targetDuration: number
   ): void => {
+    const percentageElapsed =
+      1 - Math.max(0, Math.min(1, duration / targetDuration));
+    const color = interpolateColor(percentageElapsed);
+
     const newEntry: BreakEntry = {
       startTime,
       endTime: startTime + duration,
       duration,
       targetDuration,
       date: new Date(startTime).toLocaleDateString(),
+      color,
     };
 
     // Load existing history from localStorage
@@ -112,16 +120,18 @@ function App() {
   const toggleTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
 
+    const currentTime = Date.now();
+
     if (endTime) {
-      // Timer is being reset, calculate the elapsed time
-      const elapsedTime = Date.now() - (endTime - secondsLeft * 1000); // Elapsed time in milliseconds
+      // Calculate elapsed time based on the difference from the start time
+      const startTime = endTime - (hours * 60 + minutes) * 60 * 1000; // When the timer started
+      const elapsedTime = currentTime - startTime; // Elapsed time is the difference between current time and start time
+
+      const actualDuration = elapsedTime;
+      const targetDuration = (hours * 60 + minutes) * 60 * 1000;
 
       // Save the break history with the actual elapsed time
-      saveBreakHistory(
-        Date.now() - elapsedTime,
-        elapsedTime,
-        (hours * 60 + minutes) * 60 * 1000
-      );
+      saveBreakHistory(startTime, actualDuration, targetDuration);
 
       // Reset the timer states
       setEndTime(null);
@@ -130,9 +140,9 @@ function App() {
     } else {
       // Timer is being started
       const totalMilliseconds = (hours * 60 + minutes) * 60 * 1000;
-      setEndTime(Date.now() + totalMilliseconds);
+      setEndTime(currentTime + totalMilliseconds);
       setTimerDone(false);
-      setSecondsLeft(totalMilliseconds / 1000);
+      setSecondsLeft(totalMilliseconds / 1000); // Convert back to seconds for the state
     }
   };
 
@@ -162,15 +172,15 @@ function App() {
     }
   };
 
-  const interpolateColor = (actualSeconds: number, targetSeconds: number) => {
-    const percentage = targetSeconds === 0 ? 0 : actualSeconds / targetSeconds;
-    console.log(actualSeconds, targetSeconds, percentage);
+  const interpolateColor = (percentage: number) => {
+    console.log("percentage ", percentage);
+    // Ensure percentage is between 0 and 1
+    percentage = Math.max(0, Math.min(1, percentage));
 
     const colors = [
-      { pct: 0.0, color: { r: 255, g: 107, b: 107 } }, // Red
-      { pct: 0.1, color: { r: 255, g: 140, b: 71 } }, // Orangey
+      { pct: 0.0, color: { r: 107, g: 203, b: 119 } }, // Green
       { pct: 0.5, color: { r: 255, g: 179, b: 71 } }, // Amber
-      { pct: 1.0, color: { r: 107, g: 203, b: 119 } }, // Green
+      { pct: 1.0, color: { r: 255, g: 107, b: 107 } }, // Red
     ];
 
     let lower = colors[0];
@@ -205,6 +215,18 @@ function App() {
   const mins = Math.floor((secondsLeft % 3600) / 60);
   const secs = secondsLeft % 60;
 
+  const targetDurationInSeconds = (hours * 60 + minutes) * 60;
+
+  let normalizedPercentage = 0; // Default to 0 if no endTime
+
+  if (endTime) {
+    const elapsedTimeInSeconds = (endTime - Date.now()) / 1000;
+    normalizedPercentage = Math.max(
+      0,
+      Math.min(1, elapsedTimeInSeconds / targetDurationInSeconds)
+    );
+  }
+
   // Determine the background color based on the timer state
   let backgroundClass = "default-bg";
   if (endTime && !timerDone) {
@@ -229,7 +251,12 @@ function App() {
         <h1>Cessate</h1>
         <span className="emoji">{emoji}</span>
 
-        <div className="timer-display">
+        <div
+          className="timer-display"
+          style={{
+            color: interpolateColor(normalizedPercentage),
+          }} // Apply the interpolated color to font
+        >
           {`${hrs.toString().padStart(2, "0")}:${mins
             .toString()
             .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`}
@@ -306,16 +333,15 @@ function App() {
                         })}
                       </span>
                       <span className="entry">
-                        <span className="history-item-label">Duration</span>{" "}
+                        <span className="history-item-label duration-label">
+                          Duration
+                        </span>{" "}
                         <span
                           style={{
-                            color: interpolateColor(
-                              Math.floor(entry.duration / 1000),
-                              Math.floor(entry.targetDuration / 1000)
-                            ),
+                            color: entry.color,
                           }}
                         >
-                          {Math.floor(entry.duration / 60000)} minutes
+                          {Math.floor(entry.duration / 60000)} min
                           {" ("}
                           {Math.floor(
                             (entry.duration / entry.targetDuration) * 100
