@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Setup Node.js polyfills
+        run: node scripts/setup-env.cjs
+
       - name: Build the project
         run: npm run build
 
@@ -30,5 +33,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
-          branch: gh-pages # The branch to push the build output to
-          folder: dist # The folder to deploy (where Vite places the built files)
+          branch: gh-pages
+          folder: dist
