@@ -233,30 +233,34 @@ function App() {
 
           {/* Iterate through grouped history by day */}
           <div className="history-content" ref={historyContentRef}>
-            {Object.entries(groupedHistory).map(([date, entries]) => (
-              <div key={date} className="day-entry">
-                <div className="date">
-                  {date} - {entries.length} Sessions
+            {Object.entries(groupedHistory).length === 0 ? (
+              <div className="no-data-message">No history available.</div>
+            ) : (
+              Object.entries(groupedHistory).map(([date, entries]) => (
+                <div key={date} className="day-entry">
+                  <div className="date">
+                    {date} - {entries.length} Sessions
+                  </div>
+                  <div className="history-items">
+                    {entries.map((entry, idx) => (
+                      <div key={idx} className="history-item">
+                        <span className="entry">
+                          <span className="history-item-label">Start</span>{" "}
+                          {new Date(entry.startTime).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                        <span className="entry">
+                          <span className="history-item-label">Duration</span>{" "}
+                          {Math.floor(entry.duration / 60000)} minutes
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="history-items">
-                  {entries.map((entry, idx) => (
-                    <div key={idx} className="history-item">
-                      <span className="entry">
-                        <span className="history-item-label">Start</span>{" "}
-                        {new Date(entry.startTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                      <span className="entry">
-                        <span className="history-item-label">Duration</span>{" "}
-                        {Math.floor(entry.duration / 60000)} minutes
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
           <button className="close-modal" onClick={toggleHistoryModal}>
