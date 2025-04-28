@@ -7,6 +7,7 @@ body {
   font-family: 'Inconsolata', monospace;
   background-color: #121212;
   overflow: hidden;
+  user-select: none;
 }
 
 .container {
@@ -36,6 +37,7 @@ body {
 }
 
 h1, h2 {
+  user-select: none;
   font-family: 'Chewy', sans-serif;
 }
 
@@ -54,10 +56,20 @@ button {
   text-transform: uppercase;
   cursor: pointer;
   color: #ffffff;
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
 }
 
 button:focus {
   outline: none;
+}
+
+img {
+  user-select: none;
 }
 
 .timer-display {
@@ -109,7 +121,6 @@ input[type="number"] {
 
 .timer-button {
   padding: 10px 20px;
-  transition: background-color 0.3s;
 }
 
 .timer-button:focus {
@@ -134,8 +145,9 @@ input[type="number"] {
   background: linear-gradient(to top, #010f2a, #3c2d96);
 }
 
-.emoji {
-  font-size: 36px;
+.smoking_icon > img {
+  width: 48px;
+  height: 48px;
 }
 
 /* Styles for the History Icon Button */
@@ -144,16 +156,12 @@ input[type="number"] {
   background-color: white;
   border: none;
   max-height: fit-content;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+
 }
 
-.history-icon > span {
-  font-size: 24px;
-}
-
-.history-icon > span:hover {
-  transform: scale(1.2);
+.history-icon img {
+  width: 48px;
+  height: 48px;
 }
 
 
@@ -232,6 +240,7 @@ input[type="number"] {
   justify-content: space-between;
   padding: 15px;
   background: linear-gradient(to top, rgba(48, 39, 97, 0.7), rgba(60, 45, 150, 0.7));
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   backdrop-filter: blur(10px);
   border-radius: 8px;
 }
@@ -249,7 +258,7 @@ input[type="number"] {
 
 .history-item-label {
   background-color: #3c2d96;
-  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 2px 5px;
   width: fit-content;
   border-radius: 0.25rem;
@@ -276,7 +285,6 @@ input[type="number"] {
   max-width: 20rem;
   font-size: 1rem;
   margin-top: 20px;
-  transition: background-color 0.3s ease;
 }
 
 .close-modal:hover {
@@ -290,12 +298,10 @@ input[type="number"] {
   max-height: fit-content;
   font-size: 1rem;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .clear-history-button:hover {
-  background-color: #ff5c5c;
+  background-color: #220808;
 }
 
 .no-data-message {

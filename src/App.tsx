@@ -2,6 +2,11 @@ import "./App.css";
 
 import { useEffect, useRef, useState } from "react";
 
+import ClearHistoryIcon from "./assets/delete.svg";
+import HistoryIcon from "./assets/history.svg";
+import NoSmokingIcon from "./assets/no_smoking.svg";
+import SmokingIcon from "./assets/smoking.svg";
+
 interface BreakEntry {
   startTime: number;
   endTime: number;
@@ -41,7 +46,7 @@ function App() {
     );
   }
 
-  const emoji = endTime && !timerDone ? "🚭" : "🚬";
+  const smoking_icon = endTime && !timerDone ? NoSmokingIcon : SmokingIcon;
 
   // Group the history by day
   const groupedHistory = history.reduce((groups, entry) => {
@@ -259,7 +264,9 @@ function App() {
     <div className={`container default-bg`}>
       <div className="content">
         <h1>Cessate</h1>
-        <span className="emoji">{emoji}</span>
+        <span className="smoking_icon">
+          <img src={smoking_icon} />
+        </span>
 
         <div
           className="timer-display"
@@ -304,7 +311,9 @@ function App() {
 
           {/* History icon */}
           <button className="history-icon" onClick={toggleHistoryModal}>
-            <span>📜</span>
+            <span>
+              <img src={HistoryIcon} />
+            </span>
           </button>
         </div>
 
@@ -326,7 +335,7 @@ function App() {
         <div className="modal-header">
           <h2>History</h2>
           <button className="clear-history-button" onClick={clearHistory}>
-            🧹
+            <img src={ClearHistoryIcon} />
           </button>
         </div>
 
