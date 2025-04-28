@@ -4,6 +4,10 @@ import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/cessate/",
+  build: {
+    outDir: "dist",
+  },
   plugins: [
     react(),
     VitePWA({
@@ -34,8 +38,4 @@ export default defineConfig({
       },
     }),
   ],
-  base: "/cessate/",
-  build: {
-    outDir: "dist",
-  },
 });
