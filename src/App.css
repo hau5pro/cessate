@@ -42,7 +42,7 @@ h1, h2 {
 }
 
 h1 {
-  font-size: 64px;
+  font-size: 4rem;
   margin: 5px;
 }
 
@@ -189,7 +189,7 @@ input[type="number"] {
 }
 
 .history-modal h2 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   text-align: center;
   margin: 1rem 0;
 }
@@ -283,7 +283,7 @@ input[type="number"] {
   display: block;
   width: 100%;
   max-width: 20rem;
-  font-size: 1rem;
+  font-size: 2rem;
   margin-top: 20px;
 }
 
@@ -298,6 +298,11 @@ input[type="number"] {
   max-height: fit-content;
   font-size: 1rem;
   border-radius: 5px;
+}
+
+.clear-history-button img {
+  width: 36px;
+  height: 36px;
 }
 
 .clear-history-button:hover {
