@@ -283,6 +283,7 @@ function App() {
               onChange={handleHoursChange}
               className="time-input"
               placeholder="Hours"
+              disabled={secondsLeft !== 0}
             />
             <span className="label">Hours</span>
           </div>
@@ -296,6 +297,7 @@ function App() {
               onChange={handleMinutesChange}
               className="time-input"
               placeholder="Minutes"
+              disabled={secondsLeft !== 0}
             />
             <span className="label">Minutes</span>
           </div>
