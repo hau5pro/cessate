@@ -1,11 +1,11 @@
-import "./Tracker.css";
+import './Tracker.css';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
-import ClearHistoryIcon from "@assets/delete.svg";
-import HistoryIcon from "@assets/history.svg";
-import NoSmokingIcon from "@assets/no_smoking.svg";
-import SmokingIcon from "@assets/smoking.svg";
+import ClearHistoryIcon from '@assets/delete.svg';
+import HistoryIcon from '@assets/history.svg';
+import NoSmokingIcon from '@assets/no_smoking.svg';
+import SmokingIcon from '@assets/smoking.svg';
 
 interface BreakEntry {
   startTime: number;
@@ -42,7 +42,7 @@ function TrackerPage() {
     const elapsedTimeInSeconds = (endTime - Date.now()) / 1000;
     normalizedPercentage = Math.max(
       0,
-      Math.min(1, elapsedTimeInSeconds / targetDurationInSeconds),
+      Math.min(1, elapsedTimeInSeconds / targetDurationInSeconds)
     );
   }
 
@@ -58,7 +58,7 @@ function TrackerPage() {
       groups[dateKey].push(entry);
       return groups;
     },
-    {} as { [key: string]: BreakEntry[] },
+    {} as { [key: string]: BreakEntry[] }
   );
 
   useEffect(() => {
@@ -70,7 +70,7 @@ function TrackerPage() {
     timerRef.current = window.setInterval(() => {
       const newSecondsLeft = Math.max(
         Math.round((endTime - Date.now()) / 1000),
-        0,
+        0
       );
       setSecondsLeft(newSecondsLeft);
 
@@ -111,7 +111,7 @@ function TrackerPage() {
   const saveBreakHistory = (
     startTime: number,
     duration: number,
-    targetDuration: number,
+    targetDuration: number
   ): void => {
     const percentageElapsed =
       1 - Math.max(0, Math.min(1, duration / targetDuration));
@@ -128,7 +128,7 @@ function TrackerPage() {
 
     // Load existing history from localStorage
     const storedHistory: BreakEntry[] = JSON.parse(
-      localStorage.getItem("breakHistory") || "[]",
+      localStorage.getItem('breakHistory') || '[]'
     );
 
     // Add the new entry to the history
@@ -141,20 +141,20 @@ function TrackerPage() {
     });
 
     // Save the updated history to localStorage
-    localStorage.setItem("breakHistory", JSON.stringify(filteredHistory));
+    localStorage.setItem('breakHistory', JSON.stringify(filteredHistory));
     setHistory(filteredHistory); // Update the state
   };
 
   const loadBreakHistory = (): void => {
     const storedHistory: BreakEntry[] = JSON.parse(
-      localStorage.getItem("breakHistory") || "[]",
+      localStorage.getItem('breakHistory') || '[]'
     );
     setHistory(storedHistory);
   };
 
   const clearHistory = () => {
     // Clear history from state and localStorage
-    localStorage.removeItem("breakHistory");
+    localStorage.removeItem('breakHistory');
     setHistory([]); // Clear the history state
   };
 
@@ -175,7 +175,7 @@ function TrackerPage() {
       saveBreakHistory(
         endTime - targetDuration,
         actualDuration,
-        targetDuration,
+        targetDuration
       );
 
       // Reset the timer states
@@ -206,10 +206,10 @@ function TrackerPage() {
   const toggleHistoryModal = () => {
     if (historyVisible) {
       // Add the closing class to trigger the slide-up animation
-      document.body.classList.add("history-closing");
+      document.body.classList.add('history-closing');
       setTimeout(() => {
         setHistoryVisible(false);
-        document.body.classList.remove("history-closing");
+        document.body.classList.remove('history-closing');
       }, 500); // Delay should match the duration of the slide-out animation
     } else {
       setHistoryVisible(true);
@@ -242,13 +242,13 @@ function TrackerPage() {
     const rangePct = range === 0 ? 0 : (percentage - lower.pct) / range;
 
     const r = Math.round(
-      lower.color.r + (upper.color.r - lower.color.r) * rangePct,
+      lower.color.r + (upper.color.r - lower.color.r) * rangePct
     );
     const g = Math.round(
-      lower.color.g + (upper.color.g - lower.color.g) * rangePct,
+      lower.color.g + (upper.color.g - lower.color.g) * rangePct
     );
     const b = Math.round(
-      lower.color.b + (upper.color.b - lower.color.b) * rangePct,
+      lower.color.b + (upper.color.b - lower.color.b) * rangePct
     );
 
     return `rgb(${r},${g},${b})`;
@@ -256,10 +256,10 @@ function TrackerPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
   };
 
@@ -277,9 +277,9 @@ function TrackerPage() {
             color: interpolateColor(normalizedPercentage),
           }} // Apply the interpolated color to font
         >
-          {`${hrs.toString().padStart(2, "0")}:${mins
+          {`${hrs.toString().padStart(2, '0')}:${mins
             .toString()
-            .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`}
+            .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`}
         </div>
 
         <div className="input-group">
@@ -322,19 +322,19 @@ function TrackerPage() {
 
         <button
           onClick={toggleTimer}
-          className={endTime ? "timer-button reset" : "timer-button start"}
+          className={endTime ? 'timer-button reset' : 'timer-button start'}
         >
           {endTime ? (
             <span>
               R<span className="mirror">e</span>lapse
             </span>
           ) : (
-            "Start"
+            'Start'
           )}
         </button>
       </div>
 
-      <div className={`history-modal ${historyVisible ? "open" : ""}`}>
+      <div className={`history-modal ${historyVisible ? 'open' : ''}`}>
         <div className="modal-header">
           <h2>History</h2>
           <button className="clear-history-button" onClick={clearHistory}>
@@ -356,30 +356,30 @@ function TrackerPage() {
                   {entries.map((entry, idx) => (
                     <div key={idx} className="history-item">
                       <span className="entry">
-                        <span className="history-item-label">Start</span>{" "}
+                        <span className="history-item-label">Start</span>{' '}
                         {new Date(entry.startTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
+                          hour: '2-digit',
+                          minute: '2-digit',
                         })}
                       </span>
                       <span className="entry">
                         <span className="history-item-label duration-label">
                           Duration
-                        </span>{" "}
+                        </span>{' '}
                         <span
                           style={{
                             color: entry.color,
                           }}
                         >
                           {Math.floor(entry.duration / 60000)}
-                          {" / "}
+                          {' / '}
                           {Math.floor(entry.targetDuration / 60000)}
-                          {" min"}
-                          {" ("}
+                          {' min'}
+                          {' ('}
                           {Math.floor(
-                            (entry.duration / entry.targetDuration) * 100,
+                            (entry.duration / entry.targetDuration) * 100
                           )}
-                          {"%)"}
+                          {'%)'}
                         </span>
                       </span>
                     </div>

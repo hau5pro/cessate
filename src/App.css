@@ -5,8 +5,16 @@ body {
 }
 
 body {
-  font-family: "Inconsolata", monospace;
+  font-family: 'Inconsolata', monospace;
   background-color: #121212;
   overflow: hidden;
   user-select: none;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
 }

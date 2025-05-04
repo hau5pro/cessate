@@ -1,5 +1,5 @@
-import { User } from "firebase/auth";
-import { create } from "zustand";
+import { User } from 'firebase/auth';
+import { create } from 'zustand';
 
 export interface AuthState {
   user: User | null;
