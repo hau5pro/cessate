@@ -1,0 +1,12 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Inconsolata", monospace;
+  background-color: #121212;
+  overflow: hidden;
+  user-select: none;
+}

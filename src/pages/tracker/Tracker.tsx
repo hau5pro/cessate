@@ -2,10 +2,10 @@ import "./Tracker.css";
 
 import { useEffect, useRef, useState } from "react";
 
-import ClearHistoryIcon from "./assets/delete.svg";
-import HistoryIcon from "./assets/history.svg";
-import NoSmokingIcon from "./assets/no_smoking.svg";
-import SmokingIcon from "./assets/smoking.svg";
+import ClearHistoryIcon from "@assets/delete.svg";
+import HistoryIcon from "@assets/history.svg";
+import NoSmokingIcon from "@assets/no_smoking.svg";
+import SmokingIcon from "@assets/smoking.svg";
 
 interface BreakEntry {
   startTime: number;
@@ -18,7 +18,7 @@ interface BreakEntry {
 
 const MAX_HISTORY_DAYS = 7;
 
-function Tracker() {
+function TrackerPage() {
   const [hours, setHours] = useState<number>(2);
   const [minutes, setMinutes] = useState<number>(0);
   const [endTime, setEndTime] = useState<number | null>(null);
@@ -42,21 +42,24 @@ function Tracker() {
     const elapsedTimeInSeconds = (endTime - Date.now()) / 1000;
     normalizedPercentage = Math.max(
       0,
-      Math.min(1, elapsedTimeInSeconds / targetDurationInSeconds)
+      Math.min(1, elapsedTimeInSeconds / targetDurationInSeconds),
     );
   }
 
   const smoking_icon = endTime && !timerDone ? NoSmokingIcon : SmokingIcon;
 
   // Group the history by day
-  const groupedHistory = history.reduce((groups, entry) => {
-    const dateKey = entry.date;
-    if (!groups[dateKey]) {
-      groups[dateKey] = [];
-    }
-    groups[dateKey].push(entry);
-    return groups;
-  }, {} as { [key: string]: BreakEntry[] });
+  const groupedHistory = history.reduce(
+    (groups, entry) => {
+      const dateKey = entry.date;
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      groups[dateKey].push(entry);
+      return groups;
+    },
+    {} as { [key: string]: BreakEntry[] },
+  );
 
   useEffect(() => {
     if (!endTime) return;
@@ -67,7 +70,7 @@ function Tracker() {
     timerRef.current = window.setInterval(() => {
       const newSecondsLeft = Math.max(
         Math.round((endTime - Date.now()) / 1000),
-        0
+        0,
       );
       setSecondsLeft(newSecondsLeft);
 
@@ -108,7 +111,7 @@ function Tracker() {
   const saveBreakHistory = (
     startTime: number,
     duration: number,
-    targetDuration: number
+    targetDuration: number,
   ): void => {
     const percentageElapsed =
       1 - Math.max(0, Math.min(1, duration / targetDuration));
@@ -125,7 +128,7 @@ function Tracker() {
 
     // Load existing history from localStorage
     const storedHistory: BreakEntry[] = JSON.parse(
-      localStorage.getItem("breakHistory") || "[]"
+      localStorage.getItem("breakHistory") || "[]",
     );
 
     // Add the new entry to the history
@@ -144,7 +147,7 @@ function Tracker() {
 
   const loadBreakHistory = (): void => {
     const storedHistory: BreakEntry[] = JSON.parse(
-      localStorage.getItem("breakHistory") || "[]"
+      localStorage.getItem("breakHistory") || "[]",
     );
     setHistory(storedHistory);
   };
@@ -172,7 +175,7 @@ function Tracker() {
       saveBreakHistory(
         endTime - targetDuration,
         actualDuration,
-        targetDuration
+        targetDuration,
       );
 
       // Reset the timer states
@@ -239,13 +242,13 @@ function Tracker() {
     const rangePct = range === 0 ? 0 : (percentage - lower.pct) / range;
 
     const r = Math.round(
-      lower.color.r + (upper.color.r - lower.color.r) * rangePct
+      lower.color.r + (upper.color.r - lower.color.r) * rangePct,
     );
     const g = Math.round(
-      lower.color.g + (upper.color.g - lower.color.g) * rangePct
+      lower.color.g + (upper.color.g - lower.color.g) * rangePct,
     );
     const b = Math.round(
-      lower.color.b + (upper.color.b - lower.color.b) * rangePct
+      lower.color.b + (upper.color.b - lower.color.b) * rangePct,
     );
 
     return `rgb(${r},${g},${b})`;
@@ -374,7 +377,7 @@ function Tracker() {
                           {" min"}
                           {" ("}
                           {Math.floor(
-                            (entry.duration / entry.targetDuration) * 100
+                            (entry.duration / entry.targetDuration) * 100,
                           )}
                           {"%)"}
                         </span>
@@ -395,4 +398,4 @@ function Tracker() {
   );
 }
 
-export default Tracker;
+export default TrackerPage;
