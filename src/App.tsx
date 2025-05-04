@@ -7,10 +7,20 @@ import LoginPage from "@pages/login/Login";
 import NotFoundPage from "@pages/notFound/NotFound";
 import TrackerPage from "@pages/tracker/Tracker";
 import { useAuthStore } from "@store/useAuthStore";
+import { useEffect } from "react";
 
 function App() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/tracker");
+    } else {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
