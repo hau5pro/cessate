@@ -3,6 +3,7 @@ import './App.css';
 import { Route, Routes, useNavigate } from 'react-router';
 
 import HomePage from '@pages/home/Home';
+import Layout from '@layouts/Layout';
 import LoginPage from '@pages/login/Login';
 import NotFoundPage from '@pages/notFound/NotFound';
 import TrackerPage from '@pages/tracker/Tracker';
@@ -23,10 +24,12 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/tracker" element={<TrackerPage />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/tracker" element={<TrackerPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
     </Routes>
   );
 }
