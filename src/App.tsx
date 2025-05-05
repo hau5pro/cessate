@@ -26,7 +26,7 @@ function App() {
     if (loading) return;
 
     if (user) {
-      navigate('/tracker');
+      navigate('/');
     } else {
       navigate('/login');
     }

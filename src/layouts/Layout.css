@@ -1,5 +1,6 @@
 .global-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
@@ -7,7 +8,7 @@
 
   background: linear-gradient(-45deg, #2b5876, #554688, #162b52, #2b5876);
   background-size: 400% 400%;
-  animation: gradient 30s ease-in-out infinite;
+  animation: gradient 90s ease infinite;
 }
 
 @keyframes gradient {
