@@ -13,12 +13,16 @@ import SettingsPage from '@pages/settings/Settings';
 import { initAuth } from '@services/authService';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
+import { useInitUserSettings } from '@features/userSettings/useInitUserSettings';
 
 function App() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const loading = useAuthStore((state) => state.loading);
   const location = useLocation();
+
+  // bootstrap
+  useInitUserSettings();
 
   useEffect(() => {
     const unsubscribe = initAuth();

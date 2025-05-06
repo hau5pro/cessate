@@ -13,8 +13,8 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <App />
       </ThemeProvider>
-      <App />
     </BrowserRouter>
   </StrictMode>
 );

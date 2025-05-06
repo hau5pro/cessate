@@ -17,5 +17,5 @@ export class AppRoutes {
 }
 
 export class Constants {
-  static DEFAULT_TARGET_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+  static DEFAULT_TARGET_DURATION = 2 * 60 * 60; // 2 hours in seconds
 }

@@ -6,17 +6,18 @@ const typography: TypographyVariantsOptions = {
   // Headings (Chewy)
   h1: {
     fontFamily: '"Chewy", sans-serif',
-    fontSize: '2.5rem',
+    fontSize: '3rem',
     fontWeight: 500,
   },
+  // Headings (Roboto)
   h2: {
     fontFamily: '"Roboto", sans-serif',
-    fontSize: '2rem',
+    fontSize: '2.5rem',
     fontWeight: 400,
   },
   h3: {
     fontFamily: '"Roboto", sans-serif',
-    fontSize: '1.75rem',
+    fontSize: '1.5rem',
     fontWeight: 400,
   },
 

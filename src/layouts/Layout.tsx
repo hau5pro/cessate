@@ -3,6 +3,7 @@ import './Layout.css';
 import BaseCard from '@components/BaseCard';
 import BottomNav from '@components/BottomNav';
 import { Outlet } from 'react-router';
+import { Typography } from '@mui/material';
 
 function Layout() {
   return (
@@ -18,7 +19,7 @@ function Layout() {
         }}
       >
         <header style={{ padding: '1rem', textAlign: 'center' }}>
-          <h1>Cessate</h1>
+          <Typography variant="h1">Cessate</Typography>
         </header>
         <main style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
           <Outlet />
