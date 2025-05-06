@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import BaseButton from '@components/BaseButton';
 import BaseNumberField from '@components/BaseNumberField';
+import Loading from '@components/Loading';
 import { saveUserSettings } from '@services/userSettingsService';
 import styles from './Settings.module.css';
 import theme from '@themes/theme';
@@ -63,7 +64,7 @@ function SettingsPage() {
     }
   };
 
-  if (!settings) return <div>Loading...</div>;
+  if (!settings) return <Loading />;
 
   return (
     <Box className={styles.SettingsContainer}>
@@ -108,7 +109,7 @@ function SettingsPage() {
         </BaseButton>
       </Box>
       {/* Bottom Nav Padding */}
-      <Box sx={{ paddingBottom: theme.spacing(8) }} />
+      <Box sx={{ paddingBottom: theme.spacing(6) }} />
     </Box>
   );
 }

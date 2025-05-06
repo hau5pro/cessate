@@ -1,10 +1,11 @@
-.global-container {
+.GlobalContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 
   background: linear-gradient(-45deg, #2b5876, #554688, #162b52, #2b5876);
   background-size: 400% 400%;
@@ -21,4 +22,21 @@
 	100% {
 		background-position: 0% 50%;
 	}
+}
+
+.BottomNavContainer {
+  overflow: hidden;
+}
+
+.SlideIn {
+  transform: translateY(0%);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.SlideOut {
+  transform: translateY(100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
 }

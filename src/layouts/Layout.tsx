@@ -1,13 +1,16 @@
-import './Layout.css';
-
 import BaseCard from '@components/BaseCard';
 import BottomNav from '@components/BottomNav';
+import Loading from '@components/Loading';
 import { Outlet } from 'react-router';
 import { Typography } from '@mui/material';
+import styles from './Layout.module.css';
+import { useAuthStore } from '@store/useAuthStore';
 
 function Layout() {
+  const loading = useAuthStore((state) => state.loading);
+
   return (
-    <div className="global-container">
+    <div className={styles.GlobalContainer}>
       <BaseCard
         sx={{
           width: '100%',
@@ -22,10 +25,10 @@ function Layout() {
           <Typography variant="h1">Cessate</Typography>
         </header>
         <main style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
-          <Outlet />
+          {loading ? <Loading /> : <Outlet />}
         </main>
-        <footer>
-          <BottomNav />
+        <footer className={styles.BottomNavContainer}>
+          <BottomNav className={loading ? styles.SlideOut : styles.SlideIn} />
         </footer>
       </BaseCard>
     </div>

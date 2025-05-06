@@ -6,7 +6,6 @@ import { AppRoutes } from '@utils/constants';
 import HistoryPage from '@pages/history/History';
 import HomePage from '@pages/home/Home';
 import Layout from '@layouts/Layout';
-import Loading from '@components/loading/Loading';
 import LoginPage from '@pages/login/Login';
 import NotFoundPage from '@pages/notFound/NotFound';
 import SettingsPage from '@pages/settings/Settings';
@@ -44,10 +43,6 @@ function App() {
       navigate(AppRoutes.LOGIN);
     }
   }, [user, loading, location.pathname, navigate]);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <Routes>

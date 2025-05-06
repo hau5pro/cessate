@@ -8,7 +8,11 @@ import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import theme from '@themes/theme';
 
-export default function BottomNav() {
+interface BottomNavProps {
+  className?: string;
+}
+
+export default function BottomNav({ className }: BottomNavProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [value, setValue] = useState(location.pathname);
@@ -24,6 +28,7 @@ export default function BottomNav() {
 
   return (
     <Box
+      className={className}
       sx={{
         position: 'fixed',
         bottom: 0,
