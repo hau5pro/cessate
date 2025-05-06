@@ -1,4 +1,8 @@
-import { getUserSettings } from '@services/userSettingsService';
+import {
+  createUserSettings,
+  getUserSettings,
+} from '@services/userSettingsService';
+
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
@@ -10,12 +14,19 @@ export function useInitUserSettings() {
   useEffect(() => {
     if (!user?.uid) return;
 
-    getUserSettings(user.uid)
-      .then((settings) => {
+    const init = async () => {
+      try {
+        let settings = await getUserSettings(user.uid);
+
+        if (!settings) {
+          settings = await createUserSettings(user);
+        }
+
         setSettings(settings);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error initializing user settings:', error);
-      });
-  }, [user?.uid, setSettings]);
+      }
+    };
+    init();
+  }, [user?.uid, user, setSettings]);
 }

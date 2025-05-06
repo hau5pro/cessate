@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import BaseButton from '@components/BaseButton';
 import BaseNumberField from '@components/BaseNumberField';
+import BaseTextField from '@components/BaseTextField';
 import Loading from '@components/Loading';
 import { saveUserSettings } from '@services/userSettingsService';
 import { signOut } from '@services/authService';
@@ -14,7 +15,10 @@ function SettingsPage() {
   const MAX_HOURS = 99;
   const MAX_MINUTES = 59;
   const settings = useUserSettingsStore((state) => state.settings);
-  const setSettings = useUserSettingsStore((state) => state.setSettings);
+  const updateTargetDuration = useUserSettingsStore(
+    (state) => state.updateTargetDuration
+  );
+  const updateName = useUserSettingsStore((state) => state.updateName);
 
   const getHours = () => {
     const hours = settings ? Math.floor(settings.targetDuration / 3600) : 0;
@@ -30,13 +34,15 @@ function SettingsPage() {
 
   const [inputHours, setInputHours] = useState(getHours());
   const [inputMinutes, setInputMinutes] = useState(getMinutes());
+  const [inputName, setInputName] = useState(settings?.name || '');
   const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
-    if (settings?.targetDuration !== undefined) {
+    if (settings !== null) {
       const total = settings.targetDuration;
       setInputHours(Math.floor(total / 3600));
       setInputMinutes(Math.floor((total % 3600) / 60));
+      setInputName(settings!.name);
       setDirty(false);
     }
   }, [settings]);
@@ -53,9 +59,14 @@ function SettingsPage() {
     setDirty(true);
   };
 
+  const handleNameChange = (val: string | null) => {
+    if (val === null) return;
+    setInputName(val);
+    setDirty(true);
+  };
+
   const handleSave = async () => {
-    const totalSeconds = inputHours * 3600 + inputMinutes * 60;
-    setSettings({ targetDuration: totalSeconds });
+    updateStores();
 
     try {
       await saveUserSettings();
@@ -63,6 +74,12 @@ function SettingsPage() {
     } catch (error) {
       console.error('Error saving user settings:', error);
     }
+  };
+
+  const updateStores = () => {
+    const totalSeconds = inputHours * 3600 + inputMinutes * 60;
+    updateTargetDuration(totalSeconds);
+    updateName(inputName);
   };
 
   if (!settings) return <Loading />;
@@ -73,7 +90,22 @@ function SettingsPage() {
         Settings
       </Typography>
       <Box className={styles.SettingsContent}>
-        <Box className={styles.SettingsSection} mb={2}>
+        <Box className={styles.SettingsSection}>
+          <Typography variant="h3">Account</Typography>
+          <Box className={styles.SettingsItem}>
+            <label>Email</label>
+            <Typography sx={{ color: theme.palette.grey[400] }}>
+              {settings.email}
+            </Typography>
+          </Box>
+
+          <Box className={styles.SettingsItem}>
+            <label>Name</label>
+            <BaseTextField value={inputName} onChange={handleNameChange} />
+          </Box>
+        </Box>
+
+        <Box className={styles.SettingsSection}>
           <Typography variant="h3">Timer</Typography>
 
           <Box className={styles.SettingsItem}>
@@ -96,19 +128,18 @@ function SettingsPage() {
             />
           </Box>
         </Box>
+
+        <BaseButton
+          sx={{ bgcolor: theme.palette.error.main }}
+          variant="contained"
+          onClick={signOut}
+          fullWidth
+        >
+          Sign Out
+        </BaseButton>
       </Box>
 
-      <Box className={styles.SaveButtonContainer}>
-        <Box className={styles.SettingsSection}>
-          <BaseButton
-            sx={{ bgcolor: theme.palette.error.main }}
-            variant="contained"
-            onClick={signOut}
-            fullWidth
-          >
-            Sign Out
-          </BaseButton>
-        </Box>
+      <Box className={styles.ButtonContainer}>
         <BaseButton
           variant="contained"
           color="primary"

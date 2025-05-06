@@ -1,6 +1,7 @@
 import { Constants, DB } from '@utils/constants';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
+import { User } from 'firebase/auth';
 import { UserSettings } from '@features/userSettings/userSettings';
 import { db } from '@lib/firebase/firebase';
 import { useAuthStore } from '@store/useAuthStore';
@@ -11,14 +12,23 @@ export const getUserSettings = async (uid: string) => {
   const snapshot = await getDoc(settingsRef);
 
   if (!snapshot.exists()) {
-    const defaultSettings: UserSettings = {
-      targetDuration: Constants.DEFAULT_TARGET_DURATION,
-    };
-
-    await setDoc(settingsRef, defaultSettings);
+    return null;
   }
 
   return snapshot.data() as UserSettings;
+};
+
+export const createUserSettings = async (user: User) => {
+  const settingsRef = doc(db, DB.USER_SETTINGS, user.uid);
+  const defaultSettings: UserSettings = {
+    name: user.displayName?.split(' ')[0] || '',
+    email: user.email || '',
+    targetDuration: Constants.DEFAULT_TARGET_DURATION,
+  };
+
+  await setDoc(settingsRef, defaultSettings);
+
+  return defaultSettings;
 };
 
 export const saveUserSettings = async () => {

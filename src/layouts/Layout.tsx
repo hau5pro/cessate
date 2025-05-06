@@ -24,7 +24,7 @@ function Layout() {
           margin: '0.75rem',
         }}
       >
-        <header style={{ padding: '1rem', textAlign: 'center' }}>
+        <header style={{ padding: '0.5rem', textAlign: 'center' }}>
           <Typography variant="h1">Cessate</Typography>
         </header>
         <main style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
