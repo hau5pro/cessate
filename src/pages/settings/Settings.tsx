@@ -90,21 +90,7 @@ function SettingsPage() {
         Settings
       </Typography>
       <Box className={styles.SettingsContent}>
-        <Box className={styles.SettingsSection}>
-          <Typography variant="h3">Account</Typography>
-          <Box className={styles.SettingsItem}>
-            <label>Email</label>
-            <Typography sx={{ color: theme.palette.grey[400] }}>
-              {settings.email}
-            </Typography>
-          </Box>
-
-          <Box className={styles.SettingsItem}>
-            <label>Name</label>
-            <BaseTextField value={inputName} onChange={handleNameChange} />
-          </Box>
-        </Box>
-
+        {/* Timer */}
         <Box className={styles.SettingsSection}>
           <Typography variant="h3">Timer</Typography>
 
@@ -128,7 +114,22 @@ function SettingsPage() {
             />
           </Box>
         </Box>
+        {/* Account */}
+        <Box className={styles.SettingsSection}>
+          <Typography variant="h3">Account</Typography>
+          <Box className={styles.SettingsItem}>
+            <label>Email</label>
+            <Typography sx={{ color: theme.palette.grey[400] }}>
+              {settings.email}
+            </Typography>
+          </Box>
 
+          <Box className={styles.SettingsItem}>
+            <label>Name</label>
+            <BaseTextField value={inputName} onChange={handleNameChange} />
+          </Box>
+        </Box>
+        {/* Sign Out */}
         <BaseButton
           sx={{ bgcolor: theme.palette.error.main }}
           variant="contained"
@@ -138,7 +139,7 @@ function SettingsPage() {
           Sign Out
         </BaseButton>
       </Box>
-
+      {/* Save */}
       <Box className={styles.ButtonContainer}>
         <BaseButton
           variant="contained"
