@@ -17,5 +17,5 @@ export function useInitUserSettings() {
       .catch((error) => {
         console.error('Error initializing user settings:', error);
       });
-  }, [user?.uid]);
+  }, [user?.uid, setSettings]);
 }

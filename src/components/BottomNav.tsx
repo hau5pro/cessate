@@ -40,8 +40,13 @@ export default function BottomNav() {
             color: '#bbb',
             boxShadow: 'none',
           },
+          '& .MuiBottomNavigationAction-root:focus': {
+            outline: 'none',
+            boxShadow: 'none',
+          },
           '& .Mui-selected': {
             color: theme.palette.secondary.main,
+            outline: 'none',
             '& .MuiSvgIcon-root': {
               color: theme.palette.secondary.main,
             },
