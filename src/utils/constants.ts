@@ -1,6 +1,7 @@
 export class DB {
   static USER_SETTINGS = 'user_settings';
-  static HISTORY = 'history';
+  static USER_SESSIONS = 'user_sessions';
+  static SESSIONS = 'sessions';
 }
 
 export class AppRoutes {
