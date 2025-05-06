@@ -1,6 +1,7 @@
 import './Layout.css';
 
 import BaseCard from '@components/BaseCard';
+import BottomNav from '@components/BottomNav';
 import { Outlet } from 'react-router';
 
 function Layout() {
@@ -22,7 +23,9 @@ function Layout() {
         <main style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
           <Outlet />
         </main>
-        {/* <footer className="card-footer">Bottom bar</footer> */}
+        <footer>
+          <BottomNav />
+        </footer>
       </BaseCard>
     </div>
   );

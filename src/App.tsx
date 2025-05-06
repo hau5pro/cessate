@@ -1,13 +1,15 @@
 import './App.css';
 
-import { Route, Routes, useNavigate } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
+import { AppRoutes } from '@utils/constants';
+import HistoryPage from '@pages/history/History';
 import HomePage from '@pages/home/Home';
 import Layout from '@layouts/Layout';
 import Loading from '@components/loading/Loading';
 import LoginPage from '@pages/login/Login';
 import NotFoundPage from '@pages/notFound/NotFound';
-import TrackerPage from '@pages/tracker/Tracker';
+import SettingsPage from '@pages/settings/Settings';
 import { initAuth } from '@services/authService';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
@@ -16,6 +18,7 @@ function App() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const loading = useAuthStore((state) => state.loading);
+  const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = initAuth();
@@ -25,12 +28,18 @@ function App() {
   useEffect(() => {
     if (loading) return;
 
+    const isAllowed = AppRoutes.AUTHENTICATED_ROUTES.includes(
+      location.pathname
+    );
+
     if (user) {
-      navigate('/');
+      if (location.pathname === AppRoutes.LOGIN || !isAllowed) {
+        navigate(AppRoutes.HOME);
+      }
     } else {
-      navigate('/login');
+      navigate(AppRoutes.LOGIN);
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, location.pathname, navigate]);
 
   if (loading) {
     return <Loading />;
@@ -39,10 +48,11 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/tracker" element={<TrackerPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path={AppRoutes.HOME} element={<HomePage />} />
+        <Route path={AppRoutes.LOGIN} element={<LoginPage />} />
+        <Route path={AppRoutes.SETTINGS} element={<SettingsPage />} />
+        <Route path={AppRoutes.HISTORY} element={<HistoryPage />} />
+        <Route path={AppRoutes.NOT_FOUND} element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
