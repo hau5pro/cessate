@@ -40,7 +40,9 @@ function App() {
         navigate(AppRoutes.HOME);
       }
     } else {
-      navigate(AppRoutes.LOGIN);
+      if (location.pathname !== AppRoutes.LOGIN) {
+        navigate(AppRoutes.LOGIN);
+      }
     }
   }, [user, loading, location.pathname, navigate]);
 

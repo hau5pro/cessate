@@ -1,6 +1,7 @@
 import { auth, googleProvider } from '@lib/firebase/firebase';
 import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
 
+import { resetAllStores } from '@store/resetAllStores';
 import { useAuthStore } from '@store/useAuthStore';
 
 export const initAuth = (): (() => void) => {
@@ -33,8 +34,7 @@ export const signInWithGoogle = async (): Promise<void> => {
 export const signOut = async (): Promise<void> => {
   try {
     await auth.signOut();
-    useAuthStore.getState().setUser(null);
-    useAuthStore.getState().setLoading(false);
+    resetAllStores();
   } catch (error) {
     console.error('Error signing out:', error);
   }

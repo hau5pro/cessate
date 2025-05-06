@@ -5,6 +5,7 @@ import BaseButton from '@components/BaseButton';
 import BaseNumberField from '@components/BaseNumberField';
 import Loading from '@components/Loading';
 import { saveUserSettings } from '@services/userSettingsService';
+import { signOut } from '@services/authService';
 import styles from './Settings.module.css';
 import theme from '@themes/theme';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
@@ -98,6 +99,16 @@ function SettingsPage() {
       </Box>
 
       <Box className={styles.SaveButtonContainer}>
+        <Box className={styles.SettingsSection}>
+          <BaseButton
+            sx={{ bgcolor: theme.palette.error.main }}
+            variant="contained"
+            onClick={signOut}
+            fullWidth
+          >
+            Sign Out
+          </BaseButton>
+        </Box>
         <BaseButton
           variant="contained"
           color="primary"
@@ -108,8 +119,6 @@ function SettingsPage() {
           Save
         </BaseButton>
       </Box>
-      {/* Bottom Nav Padding */}
-      <Box sx={{ paddingBottom: theme.spacing(6) }} />
     </Box>
   );
 }
