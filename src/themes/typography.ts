@@ -12,7 +12,7 @@ const typography: TypographyVariantsOptions = {
   // Headings (Roboto)
   h2: {
     fontFamily: '"Roboto", sans-serif',
-    fontSize: '2.5rem',
+    fontSize: '2rem',
     fontWeight: 400,
   },
   h3: {

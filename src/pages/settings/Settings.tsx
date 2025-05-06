@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import BaseButton from '@components/BaseButton';
 import BaseNumberField from '@components/BaseNumberField';
 import { saveUserSettings } from '@services/userSettingsService';
+import styles from './Settings.module.css';
+import theme from '@themes/theme';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 function SettingsPage() {
@@ -64,20 +66,17 @@ function SettingsPage() {
   if (!settings) return <div>Loading...</div>;
 
   return (
-    <Box p={2}>
-      <Typography variant="h2" gutterBottom>
+    <Box className={styles.SettingsContainer}>
+      <Typography className={styles.SettingsSection} variant="h2">
         Settings
       </Typography>
+      <Box className={styles.SettingsContent}>
+        <Box className={styles.SettingsSection} mb={2}>
+          <Typography variant="h3">Timer</Typography>
 
-      <Box mb={2}>
-        <Typography variant="h3" gutterBottom>
-          Timer
-        </Typography>
-
-        <Box display="flex" gap={2} mb={2} justifyContent={'space-between'}>
-          <Box>
+          <Box className={styles.SettingsItem}>
+            <label>Hours</label>
             <BaseNumberField
-              label="Hours"
               value={inputHours}
               onChange={handleHoursChange}
               min={0}
@@ -85,9 +84,9 @@ function SettingsPage() {
             />
           </Box>
 
-          <Box>
+          <Box className={styles.SettingsItem}>
+            <label>Minutes</label>
             <BaseNumberField
-              label="Minutes"
               value={inputMinutes}
               onChange={handleMinutesChange}
               min={0}
@@ -95,16 +94,21 @@ function SettingsPage() {
             />
           </Box>
         </Box>
+      </Box>
 
+      <Box className={styles.SaveButtonContainer}>
         <BaseButton
           variant="contained"
           color="primary"
           disabled={!dirty}
           onClick={handleSave}
+          fullWidth
         >
           Save
         </BaseButton>
       </Box>
+      {/* Bottom Nav Padding */}
+      <Box sx={{ paddingBottom: theme.spacing(8) }} />
     </Box>
   );
 }
