@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
+
 import CurrentSessionView from '@features/sessions/CurrentSessionView';
 import QuoteDisplay from '@features/quotes/QuoteDisplay';
 import RelapseButton from '@features/sessions/RelapseButton';
@@ -11,9 +12,12 @@ function HomePage() {
 
   return (
     <Box className={styles.HomeContainer}>
-      {session && <CurrentSessionView />}
+      <CurrentSessionView />
+      <Divider className={styles.Divider} />
       <QuoteDisplay />
-      {!session ? <StartSessionButton /> : <RelapseButton />}
+      <Box className={styles.ButtonContainer}>
+        {!session ? <StartSessionButton /> : <RelapseButton />}
+      </Box>
     </Box>
   );
 }
