@@ -22,7 +22,7 @@ export const useUserSettingsStore = create<
   hasInitialized: false,
   setSettings: (settings) => set({ settings }),
   clearSettings: () => set({ settings: null }),
-  reset: () => set({ settings: null }),
+  reset: () => set({ settings: null, hasInitialized: false }),
   updateTargetDuration: (targetDuration) =>
     set((state) => ({
       settings: state.settings ? { ...state.settings, targetDuration } : null,

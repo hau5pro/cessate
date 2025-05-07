@@ -2,7 +2,11 @@ import { CircularProgress } from '@mui/material';
 import { Fragment } from 'react';
 import styles from './Loading.module.css';
 
-const Loading = () => {
+interface LoadingProps {
+  size?: number;
+}
+
+const Loading = ({ size }: LoadingProps) => {
   return (
     <div className={styles.LoadingContainer}>
       <Fragment>
@@ -16,7 +20,7 @@ const Loading = () => {
         </svg>
         <CircularProgress
           sx={{ 'svg circle': { stroke: 'url(#gradient)' } }}
-          size={80}
+          size={size ?? 80}
         />
       </Fragment>
     </div>

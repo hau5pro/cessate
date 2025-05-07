@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { ColorUtils } from '@utils/colorUtils';
-import GradientProgress from '@components/GardientProgress';
+import GradientProgress from '@components/GradientProgress';
 import { Timestamp } from 'firebase/firestore';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';

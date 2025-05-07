@@ -21,5 +21,6 @@ export const useSessionStore = create<SessionState & SessionActions>((set) => ({
   setCurrentSession: (session) => set({ currentSession: session }),
   setLoading: (loading) => set({ loading }),
   setHasInitialized: (hasInitialized) => set({ hasInitialized }),
-  reset: () => set({ currentSession: null, loading: false }),
+  reset: () =>
+    set({ currentSession: null, loading: false, hasInitialized: false }),
 }));
