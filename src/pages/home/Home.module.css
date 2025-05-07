@@ -5,7 +5,3 @@
   height: 100%;
   overflow-x: hidden;
 }
-
-.Reverse {
-  transform: rotateY(180deg);
-}
