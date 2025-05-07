@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 
 import BaseButton from '@components/BaseButton';
+import CurrentSessionView from '@features/sessions/CurrentSessionView';
 import StartSessionButton from '@features/sessions/StartSessionButton';
 import styles from './Home.module.css';
 import { useSessionStore } from '@store/useSessionStore';
@@ -15,6 +16,7 @@ function HomePage() {
       <Typography variant="h2" textAlign={'center'}>
         {settings?.name ? `Welcome back, ${settings.name}!` : 'Welcome back!'}
       </Typography>
+      {session && <CurrentSessionView />}
       {!session ? <StartSessionButton /> : <RelapseButton />}
     </Box>
   );
