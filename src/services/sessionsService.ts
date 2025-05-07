@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   doc,
   getDocs,
@@ -7,6 +6,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   updateDoc,
   where,
 } from 'firebase/firestore';
@@ -19,14 +19,22 @@ export const startNewSession = async (
   userId: string,
   targetDuration: number
 ) => {
-  const sessionRef = collection(db, DB.USER_SESSIONS, userId, DB.SESSIONS);
+  const sessionCollection = collection(
+    db,
+    DB.USER_SESSIONS,
+    userId,
+    DB.SESSIONS
+  );
+  const sessionRef = doc(sessionCollection);
   const session: Session = {
+    id: sessionRef.id,
     createdAt: serverTimestamp(),
+    endedAt: null,
     targetDuration,
   };
-  const doc = await addDoc(sessionRef, session);
+  await setDoc(sessionRef, session);
 
-  return doc.id;
+  return sessionRef.id;
 };
 
 export const endCurrentSession = async (userId: string, sessionId: string) => {

@@ -12,6 +12,7 @@ import SettingsPage from '@pages/settings/Settings';
 import { initAuth } from '@services/authService';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
+import { useInitSession } from '@features/sessions/useInitSession';
 import { useInitUserSettings } from '@features/userSettings/useInitUserSettings';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
 
   // bootstrap
   useInitUserSettings();
+  useInitSession();
 
   useEffect(() => {
     const unsubscribe = initAuth();
