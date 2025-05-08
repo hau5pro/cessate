@@ -1,12 +1,8 @@
-import {
-  endCurrentSession,
-  getCurrentSession,
-  startNewSession,
-} from '@services/sessionsService';
-
 import BaseButton from '@components/BaseButton';
 import { Box } from '@mui/material';
 import Loading from '@components/Loading';
+import { logRelapseAndStartSession } from '@services/sessionsService';
+import { runSessionTransaction } from '@/lib/firebase/firebase';
 import { useAuthStore } from '@store/useAuthStore';
 import { useSessionStore } from '@store/useSessionStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
@@ -27,13 +23,16 @@ function RelapseButton() {
     try {
       setLoading(true);
 
-      await endCurrentSession(user.uid, session.id);
-      await startNewSession(user.uid, targetDuration);
-      const newSession = await getCurrentSession(user.uid);
+      const newSession = await runSessionTransaction(async (batch) => {
+        return logRelapseAndStartSession(
+          user.uid,
+          session,
+          targetDuration,
+          batch
+        );
+      });
 
-      if (newSession) {
-        setCurrentSession(newSession);
-      }
+      setCurrentSession(newSession);
     } catch (err) {
       console.error('Relapse failed:', err);
     } finally {

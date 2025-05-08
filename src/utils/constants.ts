@@ -2,6 +2,9 @@ export class DB {
   static USER_SETTINGS = 'user_settings';
   static USER_SESSIONS = 'user_sessions';
   static SESSIONS = 'sessions';
+  static USER_STATS = 'user_stats';
+  static DAILY_SESSIONS = 'daily_sessions';
+  static SESSION_GAPS = 'session_gaps';
 }
 
 export class AppRoutes {
@@ -21,4 +24,5 @@ export class AppRoutes {
 
 export class Constants {
   static DEFAULT_TARGET_DURATION = 2 * 60 * 60; // 2 hours in seconds
+  static MAX_BATCH_SIZE = 500; // firestore max batch size
 }

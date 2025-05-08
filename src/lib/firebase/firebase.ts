@@ -1,6 +1,13 @@
+import {
+  CollectionReference,
+  DocumentData,
+  WriteBatch,
+  collection,
+  getFirestore,
+  writeBatch,
+} from 'firebase/firestore';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 
-import { getFirestore } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
@@ -16,3 +23,25 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
+
+/* Helpers */
+export const createBatch = (): WriteBatch => writeBatch(db);
+
+export const commitBatch = async (batch: WriteBatch): Promise<void> => {
+  await batch.commit();
+};
+
+export async function runSessionTransaction<T>(
+  callback: (batch: WriteBatch) => Promise<T>
+): Promise<T> {
+  const batch = writeBatch(db);
+  const result = await callback(batch);
+  await batch.commit();
+  return result;
+}
+
+export function getCollectionRef(
+  ...pathSegments: [string, ...string[]]
+): CollectionReference<DocumentData> {
+  return collection(db, ...pathSegments);
+}

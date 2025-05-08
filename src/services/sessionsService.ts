@@ -1,24 +1,25 @@
 import {
+  Timestamp,
+  WriteBatch,
   collection,
   doc,
   getDocs,
   limit,
   orderBy,
   query,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
   where,
 } from 'firebase/firestore';
+import { incrementDailySession, logSessionGap } from './statsService';
 
 import { DB } from '@utils/constants';
 import { Session } from '@features/sessions/session';
 import { db } from '@lib/firebase/firebase';
 
-export const startNewSession = async (
+export const startNewSession = (
   userId: string,
-  targetDuration: number
-) => {
+  targetDuration: number,
+  batch: WriteBatch
+): Session => {
   const sessionCollection = collection(
     db,
     DB.USER_SESSIONS,
@@ -26,22 +27,46 @@ export const startNewSession = async (
     DB.SESSIONS
   );
   const sessionRef = doc(sessionCollection);
+
   const session: Session = {
     id: sessionRef.id,
-    createdAt: serverTimestamp(),
+    createdAt: Timestamp.now(),
     endedAt: null,
     targetDuration,
   };
-  await setDoc(sessionRef, session);
 
-  return sessionRef.id;
+  batch.set(sessionRef, session);
+  return session;
 };
 
-export const endCurrentSession = async (userId: string, sessionId: string) => {
-  const sessionDoc = doc(db, DB.USER_SESSIONS, userId, DB.SESSIONS, sessionId);
-  await updateDoc(sessionDoc, {
-    endedAt: serverTimestamp(),
+export const logRelapseAndStartSession = (
+  userId: string,
+  previousSession: Session,
+  targetDuration: number,
+  batch: WriteBatch
+): Session => {
+  const sessionCollection = collection(
+    db,
+    DB.USER_SESSIONS,
+    userId,
+    DB.SESSIONS
+  );
+  const previousRef = doc(sessionCollection, previousSession.id);
+  const now = Timestamp.now();
+
+  batch.update(previousRef, {
+    endedAt: now,
   });
+
+  const newSession = startNewSession(userId, targetDuration, batch);
+
+  const gapSeconds = now.seconds - previousSession.createdAt.seconds;
+
+  logSessionGap(batch, userId, previousSession.createdAt, gapSeconds);
+
+  incrementDailySession(batch, userId);
+
+  return newSession;
 };
 
 export const getCurrentSession = async (userId: string) => {

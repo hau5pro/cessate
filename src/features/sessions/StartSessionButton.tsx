@@ -1,6 +1,6 @@
-import { getCurrentSession, startNewSession } from '@services/sessionsService';
-
 import BaseButton from '@components/BaseButton';
+import { runSessionTransaction } from '@/lib/firebase/firebase';
+import { startNewSession } from '@services/sessionsService';
 import { useAuthStore } from '@store/useAuthStore';
 import { useSessionStore } from '@store/useSessionStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
@@ -16,11 +16,12 @@ function StartSessionButton() {
 
     try {
       setLoading(true);
-      await startNewSession(user.uid, settings.targetDuration);
-      const session = await getCurrentSession(user.uid);
-      if (session) {
-        setCurrentSession({ ...session });
-      }
+
+      const session = await runSessionTransaction(async (batch) => {
+        return startNewSession(user.uid, settings.targetDuration, batch);
+      });
+
+      setCurrentSession({ ...session });
     } catch (err) {
       console.error('Failed to start session:', err);
     } finally {
