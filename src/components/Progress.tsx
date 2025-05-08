@@ -54,20 +54,21 @@ const Progress = ({
           transition: 'width 0.5s ease, background-color 0.3s ease',
           position: 'relative',
           overflow: 'hidden',
-          ...(animate && {
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: '-100%',
-              width: '200%',
-              height: '100%',
-              background:
-                'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-              animation: `${shimmer} 2.5s ease-in-out infinite`,
-              pointerEvents: 'none',
-            },
-          }),
+          ...(animate &&
+            percent !== 100 && {
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '200%',
+                height: '100%',
+                background:
+                  'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                animation: `${shimmer} 2.5s ease-in-out infinite`,
+                pointerEvents: 'none',
+              },
+            }),
         }}
       />
     </Box>

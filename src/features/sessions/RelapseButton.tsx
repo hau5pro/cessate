@@ -41,33 +41,57 @@ function RelapseButton() {
     }
   };
 
+  const spacing = '0.3em';
+
   return (
     <BaseButton
-      sx={{ minHeight: '56px' }}
+      sx={{ minHeight: '56px', position: 'relative' }}
       color="secondary"
       onClick={handleRelapse}
       disabled={loading}
     >
-      {loading ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          width="100%"
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+      >
+        <span
+          style={{
+            fontFamily: 'Roboto, sans-serif',
+            letterSpacing: spacing,
+            display: 'inline-block',
+          }}
         >
-          <Loading size={30} />
-        </Box>
-      ) : (
-        <>
           R
           <span
-            style={{ transform: 'rotateY(180deg)', display: 'inline-block' }}
+            style={{
+              transform: 'rotateY(180deg)',
+              display: 'inline-block',
+              margin: `0 ${spacing} 0 -${spacing}`,
+            }}
           >
             e
           </span>
           lapse
-        </>
-      )}
+        </span>
+      </Box>
+
+      {
+        <Box
+          sx={{
+            position: 'absolute',
+            right: 64,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            opacity: loading ? 1 : 0,
+            transition: 'opacity 0.2s ease',
+            pointerEvents: 'none',
+          }}
+        >
+          <Loading size={30} />
+        </Box>
+      }
     </BaseButton>
   );
 }
