@@ -42,11 +42,14 @@ export default function BottomNav({ className }: BottomNavProps) {
           '& .MuiBottomNavigationAction-root': {
             color: theme.palette.secondary.dark,
             boxShadow: 'none',
+            transition: 'color 0.3s ease',
           },
-          '& .MuiBottomNavigationAction-root:focus': {
-            outline: 'none',
-            boxShadow: 'none',
-          },
+          '& .MuiBottomNavigationAction-root:focus, & .MuiBottomNavigationAction-root:focus-visible':
+            {
+              outline: 'none',
+              boxShadow: 'none',
+              color: theme.palette.secondary.dark,
+            },
           '& .Mui-selected': {
             color: theme.palette.secondary.main,
             outline: 'none',
@@ -54,8 +57,8 @@ export default function BottomNav({ className }: BottomNavProps) {
               color: theme.palette.secondary.main,
             },
           },
-          '& .MuiTouchRipple-root': {
-            boxShadow: 'none',
+          '& .MuiTouchRipple-root, & .MuiTouchRipple-child': {
+            display: 'none',
           },
         }}
         value={value}
