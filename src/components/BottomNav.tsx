@@ -1,11 +1,9 @@
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
+import { History, Home, Settings, Timeline } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { AppRoutes } from '@utils/constants';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
 import theme from '@themes/theme';
 
 interface BottomNavProps {
@@ -42,7 +40,7 @@ export default function BottomNav({ className }: BottomNavProps) {
           bgcolor: 'transparent',
           backdropFilter: 'blur(10px)',
           '& .MuiBottomNavigationAction-root': {
-            color: '#bbb',
+            color: theme.palette.secondary.dark,
             boxShadow: 'none',
           },
           '& .MuiBottomNavigationAction-root:focus': {
@@ -64,16 +62,21 @@ export default function BottomNav({ className }: BottomNavProps) {
         onChange={handleChange}
         showLabels
       >
+        <BottomNavigationAction label="Home" value="/" icon={<Home />} />
         <BottomNavigationAction
           label="History"
           value={AppRoutes.HISTORY}
-          icon={<BarChartIcon />}
+          icon={<History />}
         />
-        <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
+        <BottomNavigationAction
+          label="Stats"
+          value={AppRoutes.STATS}
+          icon={<Timeline />}
+        />
         <BottomNavigationAction
           label="Settings"
           value={AppRoutes.SETTINGS}
-          icon={<SettingsIcon />}
+          icon={<Settings />}
         />
       </BottomNavigation>
     </Box>

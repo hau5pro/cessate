@@ -9,10 +9,12 @@ export class AppRoutes {
   static HOME = '/';
   static SETTINGS = '/settings';
   static HISTORY = '/history';
+  static STATS = '/stats';
   static NOT_FOUND = '*';
   static AUTHENTICATED_ROUTES = [
     AppRoutes.HOME,
     AppRoutes.HISTORY,
+    AppRoutes.STATS,
     AppRoutes.SETTINGS,
   ];
 }

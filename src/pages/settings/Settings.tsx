@@ -6,6 +6,7 @@ import BaseButton from '@components/BaseButton';
 import BaseNumberField from '@components/BaseNumberField';
 import BaseTextField from '@components/BaseTextField';
 import Loading from '@components/Loading';
+import globalStyles from '@/App.module.css';
 import { motion } from 'framer-motion';
 import { saveUserSettings } from '@services/userSettingsService';
 import { signOut } from '@services/authService';
@@ -22,6 +23,26 @@ const sectionVariants = {
   }),
 };
 
+const MotionSection = ({
+  children,
+  index,
+  className,
+}: {
+  children: React.ReactNode;
+  index: number;
+  className?: string;
+}) => (
+  <motion.div
+    className={className}
+    variants={sectionVariants}
+    initial="hidden"
+    animate="visible"
+    custom={index}
+  >
+    {children}
+  </motion.div>
+);
+
 function SettingsPage() {
   const MAX_HOURS = 744; // 31 days
   const MAX_MINUTES = 59;
@@ -32,15 +53,11 @@ function SettingsPage() {
   const updateName = useUserSettingsStore((state) => state.updateName);
 
   const getHours = () => {
-    const hours = settings ? Math.floor(settings.targetDuration / 3600) : 0;
-    return hours;
+    return settings ? Math.floor(settings.targetDuration / 3600) : 0;
   };
 
   const getMinutes = () => {
-    const minutes = settings
-      ? Math.floor((settings.targetDuration / 60) % 60)
-      : 0;
-    return minutes;
+    return settings ? Math.floor((settings.targetDuration / 60) % 60) : 0;
   };
 
   const [inputHours, setInputHours] = useState(getHours());
@@ -102,22 +119,16 @@ function SettingsPage() {
 
   return (
     <Box className={styles.SettingsContainer}>
-      <Box className={styles.SettingsHeader}>
-        <Settings className={styles.MaterialIcon} fontSize="large" />
+      {/* Animated Header */}
+      <MotionSection className={globalStyles.Header} index={0}>
+        <Settings className={globalStyles.MaterialIcon} fontSize="large" />
         <Typography variant="h2">Settings</Typography>
-      </Box>
+      </MotionSection>
 
       <Box className={styles.SettingsContent}>
-        {/* Timer Section */}
-        <motion.div
-          className={styles.SettingsSection}
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          custom={0}
-        >
+        <MotionSection index={1} className={styles.SettingsSection}>
           <Box className={styles.SectionHeader}>
-            <Timer className={styles.MaterialIcon} fontSize="medium" />
+            <Timer className={globalStyles.MaterialIcon} fontSize="medium" />
             <Typography variant="h3">Timer</Typography>
           </Box>
 
@@ -140,18 +151,14 @@ function SettingsPage() {
               max={MAX_MINUTES}
             />
           </Box>
-        </motion.div>
+        </MotionSection>
 
-        {/* Account Section */}
-        <motion.div
-          className={styles.SettingsSection}
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          custom={1}
-        >
+        <MotionSection index={2} className={styles.SettingsSection}>
           <Box className={styles.SectionHeader}>
-            <AccountCircle className={styles.MaterialIcon} fontSize="medium" />
+            <AccountCircle
+              className={globalStyles.MaterialIcon}
+              fontSize="medium"
+            />
             <Typography variant="h3">Account</Typography>
           </Box>
 
@@ -166,15 +173,9 @@ function SettingsPage() {
             <label>Name</label>
             <BaseTextField value={inputName} onChange={handleNameChange} />
           </Box>
-        </motion.div>
+        </MotionSection>
 
-        {/* Sign Out Button */}
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          custom={2}
-        >
+        <MotionSection index={3}>
           <BaseButton
             sx={{ bgcolor: theme.palette.error.main }}
             variant="contained"
@@ -183,10 +184,9 @@ function SettingsPage() {
           >
             Sign Out
           </BaseButton>
-        </motion.div>
+        </MotionSection>
       </Box>
 
-      {/* Save Button */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

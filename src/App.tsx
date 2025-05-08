@@ -1,4 +1,4 @@
-import './App.css';
+import './App.module.css';
 
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
@@ -9,6 +9,7 @@ import Layout from '@layouts/Layout';
 import LoginPage from '@pages/login/Login';
 import NotFoundPage from '@pages/notFound/NotFound';
 import SettingsPage from '@pages/settings/Settings';
+import StatsPage from '@pages/stats/Stats';
 import { initAuth } from '@services/authService';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
@@ -53,6 +54,7 @@ function App() {
         <Route path={AppRoutes.LOGIN} element={<LoginPage />} />
         <Route path={AppRoutes.SETTINGS} element={<SettingsPage />} />
         <Route path={AppRoutes.HISTORY} element={<HistoryPage />} />
+        <Route path={AppRoutes.STATS} element={<StatsPage />} />
         <Route path={AppRoutes.NOT_FOUND} element={<NotFoundPage />} />
       </Route>
     </Routes>

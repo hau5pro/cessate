@@ -1,0 +1,11 @@
+.Header {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  padding: 0 0 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.MaterialIcon {
+  margin: auto 0;
+}
