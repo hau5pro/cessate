@@ -6,11 +6,21 @@ import BaseButton from '@components/BaseButton';
 import BaseNumberField from '@components/BaseNumberField';
 import BaseTextField from '@components/BaseTextField';
 import Loading from '@components/Loading';
+import { motion } from 'framer-motion';
 import { saveUserSettings } from '@services/userSettingsService';
 import { signOut } from '@services/authService';
 import styles from './Settings.module.css';
 import theme from '@themes/theme';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
+
+const sectionVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { delay: i * 0.1, duration: 0.4, ease: 'easeOut' },
+  }),
+};
 
 function SettingsPage() {
   const MAX_HOURS = 744; // 31 days
@@ -83,7 +93,12 @@ function SettingsPage() {
     updateName(inputName);
   };
 
-  if (!settings) return <Loading />;
+  if (!settings)
+    return (
+      <Box className={styles.LoadingContainer}>
+        <Loading />
+      </Box>
+    );
 
   return (
     <Box className={styles.SettingsContainer}>
@@ -93,8 +108,14 @@ function SettingsPage() {
       </Box>
 
       <Box className={styles.SettingsContent}>
-        {/* Timer */}
-        <Box className={styles.SettingsSection}>
+        {/* Timer Section */}
+        <motion.div
+          className={styles.SettingsSection}
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          custom={0}
+        >
           <Box className={styles.SectionHeader}>
             <Timer className={styles.MaterialIcon} fontSize="medium" />
             <Typography variant="h3">Timer</Typography>
@@ -119,9 +140,16 @@ function SettingsPage() {
               max={MAX_MINUTES}
             />
           </Box>
-        </Box>
-        {/* Account */}
-        <Box className={styles.SettingsSection}>
+        </motion.div>
+
+        {/* Account Section */}
+        <motion.div
+          className={styles.SettingsSection}
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          custom={1}
+        >
           <Box className={styles.SectionHeader}>
             <AccountCircle className={styles.MaterialIcon} fontSize="medium" />
             <Typography variant="h3">Account</Typography>
@@ -138,19 +166,33 @@ function SettingsPage() {
             <label>Name</label>
             <BaseTextField value={inputName} onChange={handleNameChange} />
           </Box>
-        </Box>
-        {/* Sign Out */}
-        <BaseButton
-          sx={{ bgcolor: theme.palette.error.main }}
-          variant="contained"
-          onClick={signOut}
-          fullWidth
+        </motion.div>
+
+        {/* Sign Out Button */}
+        <motion.div
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          custom={2}
         >
-          Sign Out
-        </BaseButton>
+          <BaseButton
+            sx={{ bgcolor: theme.palette.error.main }}
+            variant="contained"
+            onClick={signOut}
+            fullWidth
+          >
+            Sign Out
+          </BaseButton>
+        </motion.div>
       </Box>
-      {/* Save */}
-      <Box className={styles.ButtonContainer}>
+
+      {/* Save Button */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.4 }}
+        className={styles.ButtonContainer}
+      >
         <BaseButton
           variant="contained"
           color="primary"
@@ -160,7 +202,7 @@ function SettingsPage() {
         >
           Save
         </BaseButton>
-      </Box>
+      </motion.div>
     </Box>
   );
 }

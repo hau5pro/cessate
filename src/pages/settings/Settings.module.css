@@ -1,8 +1,16 @@
+.LoadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  overflow: hidden;
+}
+
 .SettingsContainer {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .SettingsContent {
