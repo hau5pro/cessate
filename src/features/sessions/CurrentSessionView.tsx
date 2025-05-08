@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { ColorUtils } from '@utils/colorUtils';
-import GradientProgress from '@components/GradientProgress';
+import Progress from '@components/Progress';
 import { Timestamp } from 'firebase/firestore';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
@@ -36,7 +36,13 @@ function CurrentSessionView() {
     <Box
       textAlign="center"
       p={2}
-      sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, flexGrow: 1 }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: 0.5,
+        flexGrow: 1,
+      }}
     >
       <Typography variant="h3" color="secondary" mt={1}>
         You've abstained for
@@ -59,9 +65,10 @@ function CurrentSessionView() {
         p={2}
         sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
       >
-        <GradientProgress
+        <Progress
           percent={percent}
           width={'60%'}
+          animate={true}
           sx={{ alignSelf: 'center' }}
         />
         <Typography variant="body2" display="block" mt={1}>

@@ -17,7 +17,16 @@ const QuoteDisplay = () => {
   const words = quote.text.split(' ');
 
   return (
-    <Box textAlign="center" sx={{ flexGrow: 1, padding: 2 }}>
+    <Box
+      textAlign="center"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        flexGrow: 1,
+        padding: 2,
+      }}
+    >
       <Typography variant="h3" gutterBottom>
         <Box component="span" display="inline-block">
           {words.map((word, index) => (
