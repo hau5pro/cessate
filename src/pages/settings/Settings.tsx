@@ -1,3 +1,4 @@
+import { AccountCircle, Settings, Timer } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -12,7 +13,7 @@ import theme from '@themes/theme';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 function SettingsPage() {
-  const MAX_HOURS = 99;
+  const MAX_HOURS = 744; // 31 days
   const MAX_MINUTES = 59;
   const settings = useUserSettingsStore((state) => state.settings);
   const updateTargetDuration = useUserSettingsStore(
@@ -86,13 +87,18 @@ function SettingsPage() {
 
   return (
     <Box className={styles.SettingsContainer}>
-      <Typography className={styles.SettingsSection} variant="h2">
-        Settings
-      </Typography>
+      <Box className={styles.SettingsHeader}>
+        <Settings className={styles.MaterialIcon} fontSize="large" />
+        <Typography variant="h2">Settings</Typography>
+      </Box>
+
       <Box className={styles.SettingsContent}>
         {/* Timer */}
         <Box className={styles.SettingsSection}>
-          <Typography variant="h3">Timer</Typography>
+          <Box className={styles.SectionHeader}>
+            <Timer className={styles.MaterialIcon} fontSize="medium" />
+            <Typography variant="h3">Timer</Typography>
+          </Box>
 
           <Box className={styles.SettingsItem}>
             <label>Hours</label>
@@ -116,7 +122,11 @@ function SettingsPage() {
         </Box>
         {/* Account */}
         <Box className={styles.SettingsSection}>
-          <Typography variant="h3">Account</Typography>
+          <Box className={styles.SectionHeader}>
+            <AccountCircle className={styles.MaterialIcon} fontSize="medium" />
+            <Typography variant="h3">Account</Typography>
+          </Box>
+
           <Box className={styles.SettingsItem}>
             <label>Email</label>
             <Typography sx={{ color: theme.palette.grey[400] }}>
