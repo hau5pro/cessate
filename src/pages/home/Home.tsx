@@ -1,4 +1,6 @@
 import { Box, Divider } from '@mui/material';
+import { motion, useAnimation } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 import CurrentSessionView from '@features/sessions/CurrentSessionView';
 import QuoteDisplay from '@features/quotes/QuoteDisplay';
@@ -9,14 +11,60 @@ import { useSessionStore } from '@store/useSessionStore';
 
 function HomePage() {
   const session = useSessionStore((state) => state.currentSession);
+  const loading = useSessionStore((state) => state.loading);
+  const hasInitialized = useSessionStore((state) => state.hasInitialized);
+
+  const topControls = useAnimation();
+  const bottomControls = useAnimation();
+  const quoteControls = useAnimation();
+
+  const [hasRendered, setHasRendered] = useState(false);
+
+  useEffect(() => {
+    if (hasInitialized) setHasRendered(true);
+  }, [hasInitialized]);
+
+  useEffect(() => {
+    if (hasRendered) {
+      topControls.start({ y: 0, opacity: 1 });
+
+      setTimeout(() => {
+        bottomControls.start({ y: 0, opacity: 1 });
+      }, 200);
+
+      setTimeout(() => {
+        quoteControls.start({ opacity: 1 });
+      }, 1000);
+    }
+  }, [hasRendered, topControls, bottomControls, quoteControls]);
+
+  if (!hasInitialized) return null;
 
   return (
     <Box className={styles.HomeContainer}>
-      <CurrentSessionView />
-      <Divider className={styles.Divider} />
-      <QuoteDisplay />
+      <Box className={styles.ScrollContainer}>
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={topControls}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          <CurrentSessionView />
+        </motion.div>
+
+        <Divider />
+
+        <QuoteDisplay controls={quoteControls} />
+      </Box>
+
       <Box className={styles.ButtonContainer}>
-        {!session ? <StartSessionButton /> : <RelapseButton />}
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          animate={bottomControls}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ width: '100%' }}
+        >
+          {!loading && !session ? <StartSessionButton /> : <RelapseButton />}
+        </motion.div>
       </Box>
     </Box>
   );

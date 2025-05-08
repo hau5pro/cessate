@@ -1,11 +1,21 @@
 .HomeContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   gap: 1rem;
   height: -webkit-fill-available;
-  overflow-x: hidden;
+  overflow: hidden;
 }
+
+.ScrollContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 
 .ButtonContainer {
   justify-self: flex-end;

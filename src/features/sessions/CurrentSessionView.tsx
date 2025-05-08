@@ -35,7 +35,7 @@ function CurrentSessionView() {
   return (
     <Box
       textAlign="center"
-      p={2}
+      p={1}
       sx={{
         display: 'flex',
         flexDirection: 'column',
