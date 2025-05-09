@@ -31,7 +31,7 @@ export default function DailySessionChart() {
   return (
     <Box>
       <Box mt={2} display="flex" justifyContent="space-between">
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="body2" sx={{ margin: 'auto 0' }} gutterBottom>
           Sessions per Day
         </Typography>
         <BaseToggleButtonGroup
@@ -45,7 +45,7 @@ export default function DailySessionChart() {
           ))}
         </BaseToggleButtonGroup>
       </Box>
-      <Box height={300} sx={{ pointerEvents: 'none' }}>
+      <Box height={300} minHeight={300} sx={{ pointerEvents: 'none' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={cache?.data || []}

@@ -49,7 +49,9 @@ export default function SessionGapsChart() {
         alignItems="center"
         mb={1}
       >
-        <Typography variant="body1">Time Between Sessions</Typography>
+        <Typography variant="body2" sx={{ margin: 'auto 0' }}>
+          Time Between Sessions
+        </Typography>
         <BaseToggleButtonGroup
           value={selectedRange}
           onChange={handleRangeChange}
@@ -62,7 +64,7 @@ export default function SessionGapsChart() {
         </BaseToggleButtonGroup>
       </Box>
 
-      <Box height={300} sx={{ pointerEvents: 'none' }}>
+      <Box height={300} minHeight={300} sx={{ pointerEvents: 'none' }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={displayData}
@@ -98,8 +100,8 @@ export default function SessionGapsChart() {
               dataKey="value"
               stroke={theme.palette.primary.main}
               strokeWidth={2}
-              dot={{ r: 3 }}
-              activeDot={{ r: 5 }}
+              dot={{ r: 3, fill: theme.palette.primary.main }}
+              activeDot={{ r: 5, fill: theme.palette.primary.main }}
               isAnimationActive={false}
             />
           </LineChart>
