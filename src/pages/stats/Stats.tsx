@@ -8,6 +8,7 @@ import {
 } from 'recharts';
 import { Box, Typography, alpha } from '@mui/material';
 
+import AnimatedCounter from '@components/AnimatedCounter';
 import BaseToggleButton from '@components/BaseToggleButton';
 import BaseToggleButtonGroup from '@components/BaseToggleButtonGroup';
 import { Constants } from '@utils/constants';
@@ -22,6 +23,7 @@ import { useEffect } from 'react';
 import { useStatsStore } from '@store/useStatsStore';
 
 function StatsPage() {
+  const today = dayjs().format('YYYY-MM-DD');
   const {
     dailySessions,
     setDailySessionsRange,
@@ -32,6 +34,9 @@ function StatsPage() {
 
   const selectedRange = dailySessions.selectedRange;
   const cache = dailySessions.cache[selectedRange];
+
+  const todayData = cache?.data?.find((d) => d.day === today);
+  const todaysDailySessions = todayData?.count ?? 0;
 
   const isStale =
     !cache || Date.now() - cache.lastFetched > Constants.ONE_DAY_IN_MS;
@@ -58,7 +63,11 @@ function StatsPage() {
         <TimelineIcon className={globalStyles.MaterialIcon} fontSize="large" />
         Stats
       </Typography>
-
+      <AnimatedCounter
+        value={todaysDailySessions}
+        label="Daily Sessions"
+        variant="subtitle1"
+      />
       <Box>
         <Box mt={2} display="flex" justifyContent="space-between">
           <Typography variant="body1" gutterBottom>

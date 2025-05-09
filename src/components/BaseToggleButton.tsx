@@ -12,7 +12,7 @@ export default function BaseToggleButton(props: ToggleButtonProps) {
         outline: 'none',
 
         '&.Mui-selected': {
-          backgroundColor: 'secondary.main',
+          backgroundColor: 'secondary.dark',
           color: 'common.white',
           outline: 'none',
           '&:hover': {
