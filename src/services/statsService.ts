@@ -19,6 +19,8 @@ import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
+export type GapUnit = 'minutes' | 'hours' | 'days';
+
 export function incrementDailySession(batch: WriteBatch, userId: string): void {
   const todayKey = dayjs().utc().format('YYYY-MM-DD');
   const docRef = doc(db, DB.USER_STATS, userId, DB.DAILY_SESSIONS, todayKey);
@@ -143,4 +145,54 @@ function fillMissingGaps(gaps: SessionGap[], range: number): SessionGap[] {
   }
 
   return filled;
+}
+
+function getGapUnit(maxHours: number): GapUnit {
+  if (maxHours < 1) return 'minutes';
+  if (maxHours > 24) return 'days';
+  return 'hours';
+}
+
+function getYDomain(maxHours: number, unit: GapUnit): [number, number] {
+  switch (unit) {
+    case 'minutes':
+      return [0, Math.ceil(maxHours * 60 + 10)];
+    case 'days':
+      return [0, maxHours / 24 + 0.5];
+    case 'hours':
+    default:
+      return [0, maxHours + 0.1];
+  }
+}
+
+export function transformSessionGaps(raw: { day: string; seconds: number }[]): {
+  data: { day: string; value: number }[];
+  unit: GapUnit;
+  domain: [number, number];
+} {
+  const rawHours = raw.map((gap) => ({
+    day: gap.day,
+    hours: +(gap.seconds / 3600).toFixed(2),
+  }));
+
+  const maxHours = Math.max(...rawHours.map((d) => d.hours), 0);
+  const unit = getGapUnit(maxHours);
+
+  const data = rawHours.map(({ day, hours }) => ({
+    day,
+    value:
+      unit === 'minutes'
+        ? Math.round(hours * 60)
+        : unit === 'days'
+          ? +(hours / 24).toFixed(2)
+          : hours,
+  }));
+
+  return {
+    data: data.length
+      ? data
+      : [{ day: dayjs().format('YYYY-MM-DD'), value: 0 }],
+    unit,
+    domain: getYDomain(maxHours, unit),
+  };
 }

@@ -12,6 +12,7 @@ import BaseToggleButton from '@components/BaseToggleButton';
 import BaseToggleButtonGroup from '@components/BaseToggleButtonGroup';
 import dayjs from 'dayjs';
 import theme from '@themes/theme';
+import { transformSessionGaps } from '@services/statsService';
 import { useStatsStore } from '@store/useStatsStore';
 
 export default function SessionGapsChart() {
@@ -28,39 +29,17 @@ export default function SessionGapsChart() {
 
   const defaultRanges = [7, 30];
 
-  const rawData =
-    cache?.data.map((gap) => ({
+  const raw = cache?.data ?? [];
+  const {
+    data: displayData,
+    unit,
+    domain: yDomain,
+  } = transformSessionGaps(
+    raw.map((gap) => ({
       day: gap.startedAt,
-      hours: +(gap.seconds / 3600).toFixed(2),
-    })) ?? [];
-
-  const maxHours = Math.max(...rawData.map((d) => d.hours), 0);
-  let unit: 'minutes' | 'hours' | 'days' = 'hours';
-
-  if (maxHours < 1) {
-    unit = 'minutes';
-  } else if (maxHours > 24) {
-    unit = 'days';
-  }
-
-  const displayData = rawData.length
-    ? rawData.map((d) => ({
-        day: d.day,
-        value:
-          unit === 'minutes'
-            ? +(d.hours * 60).toFixed(0)
-            : unit === 'days'
-              ? +(d.hours / 24).toFixed(2)
-              : d.hours,
-      }))
-    : [{ day: dayjs().format('YYYY-MM-DD'), value: 0 }];
-
-  const yDomain: [number, number] =
-    unit === 'minutes'
-      ? [0, Math.ceil(maxHours * 60 + 10)]
-      : unit === 'days'
-        ? [0, maxHours / 24 + 0.5]
-        : [0, maxHours + 0.1];
+      seconds: gap.seconds,
+    }))
+  );
 
   return (
     <Box mt={4}>
@@ -104,12 +83,7 @@ export default function SessionGapsChart() {
                 unit === 'minutes' ? `${v}` : v.toFixed(1)
               }
               label={{
-                value:
-                  unit === 'minutes'
-                    ? 'Minutes'
-                    : unit === 'days'
-                      ? 'Days'
-                      : 'Hours',
+                value: unit.charAt(0).toUpperCase() + unit.slice(1),
                 angle: -90,
                 position: 'insideLeft',
                 style: {
