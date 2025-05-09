@@ -1,5 +1,10 @@
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
-import { History, Home, Settings, Timeline } from '@mui/icons-material';
+import {
+  HistoryIcon,
+  HomeIcon,
+  SettingsIcon,
+  TimelineIcon,
+} from './CustomIcons';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
@@ -65,21 +70,21 @@ export default function BottomNav({ className }: BottomNavProps) {
         onChange={handleChange}
         showLabels
       >
-        <BottomNavigationAction label="Home" value="/" icon={<Home />} />
+        <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
         <BottomNavigationAction
           label="History"
           value={AppRoutes.HISTORY}
-          icon={<History />}
+          icon={<HistoryIcon />}
         />
         <BottomNavigationAction
           label="Stats"
           value={AppRoutes.STATS}
-          icon={<Timeline />}
+          icon={<TimelineIcon />}
         />
         <BottomNavigationAction
           label="Settings"
           value={AppRoutes.SETTINGS}
-          icon={<Settings />}
+          icon={<SettingsIcon />}
         />
       </BottomNavigation>
     </Box>

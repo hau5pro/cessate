@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { Check, Warning } from '@mui/icons-material';
+import { CheckIcon, WarningIcon } from '@components/CustomIcons';
 import { DeletionProgress, deleteAllUserData } from '@services/deletionService';
 
 import BaseButton from '@components/BaseButton';
@@ -84,7 +84,7 @@ export default function DeleteDataButton({ userId }: Props) {
               </>
             ) : (
               <>
-                <Check
+                <CheckIcon
                   className={globalStyles.MaterialIcon}
                   fontSize="large"
                   sx={{ color: theme.palette.success.main }}
@@ -108,7 +108,7 @@ export default function DeleteDataButton({ userId }: Props) {
       {confirming && (
         <Box className={styles.ConfirmBackdrop}>
           <Box className={styles.ConfirmBox}>
-            <Warning
+            <WarningIcon
               className={globalStyles.MaterialIcon}
               fontSize="large"
               sx={{ color: theme.palette.warning.main }}

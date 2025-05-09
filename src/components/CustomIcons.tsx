@@ -1,3 +1,12 @@
+export { default as HomeIcon } from '@mui/icons-material/Home';
+export { default as HistoryIcon } from '@mui/icons-material/History';
+export { default as SettingsIcon } from '@mui/icons-material/Settings';
+export { default as TimelineIcon } from '@mui/icons-material/Timeline';
+export { default as AccountCircleIcon } from '@mui/icons-material/AccountCircle';
+export { default as TimerIcon } from '@mui/icons-material/Timer';
+export { default as CheckIcon } from '@mui/icons-material/Check';
+export { default as WarningIcon } from '@mui/icons-material/Warning';
+
 import SvgIcon from '@mui/material/SvgIcon';
 
 export function GoogleIcon() {

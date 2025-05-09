@@ -1,4 +1,8 @@
-import { AccountCircle, Settings, Timer } from '@mui/icons-material';
+import {
+  AccountCircleIcon,
+  SettingsIcon,
+  TimerIcon,
+} from '@components/CustomIcons';
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -123,14 +127,17 @@ function SettingsPage() {
   return (
     <Box className={styles.SettingsContainer}>
       <MotionSection className={globalStyles.Header} index={0}>
-        <Settings className={globalStyles.MaterialIcon} fontSize="large" />
+        <SettingsIcon className={globalStyles.MaterialIcon} fontSize="large" />
         <Typography variant="h2">Settings</Typography>
       </MotionSection>
 
       <Box className={styles.SettingsContent}>
         <MotionSection index={1} className={styles.SettingsSection}>
           <Box className={styles.SectionHeader}>
-            <Timer className={globalStyles.MaterialIcon} fontSize="medium" />
+            <TimerIcon
+              className={globalStyles.MaterialIcon}
+              fontSize="medium"
+            />
             <Typography variant="h3">Timer</Typography>
           </Box>
 
@@ -157,7 +164,7 @@ function SettingsPage() {
 
         <MotionSection index={2} className={styles.SettingsSection}>
           <Box className={styles.SectionHeader}>
-            <AccountCircle
+            <AccountCircleIcon
               className={globalStyles.MaterialIcon}
               fontSize="medium"
             />
