@@ -61,7 +61,7 @@ export const logRelapseAndStartSession = (
   const duration = now.seconds - previousSession.createdAt.seconds;
   const normalizedPercent = duration / previousSession.targetDuration;
   const color = ColorUtils.interpolateColor(normalizedPercent);
-  const percentage = Math.round(normalizedPercent * 100);
+  const percentage = Math.min(100, Math.round(normalizedPercent * 100));
 
   batch.update(previousRef, {
     endedAt: now,
