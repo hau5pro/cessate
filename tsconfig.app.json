@@ -25,7 +25,7 @@
     /* Custom */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "@globalStyles": ["src/App.module.css"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@features/*": ["src/features/*"],

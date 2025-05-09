@@ -6,7 +6,7 @@ import {
   increment,
 } from 'firebase/firestore';
 
-import { DB } from '@/utils/constants';
+import { DB } from '@utils/constants';
 import dayjs from 'dayjs';
 import { db } from '@lib/firebase/firebase';
 import utc from 'dayjs/plugin/utc';

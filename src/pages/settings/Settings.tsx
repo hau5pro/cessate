@@ -5,13 +5,15 @@ import { useEffect, useState } from 'react';
 import BaseButton from '@components/BaseButton';
 import BaseNumberField from '@components/BaseNumberField';
 import BaseTextField from '@components/BaseTextField';
+import DeleteDataButton from '@features/userSettings/DeleteDataButton';
 import Loading from '@components/Loading';
-import globalStyles from '@/App.module.css';
+import globalStyles from '@themes/GlobalStyles.module.css';
 import { motion } from 'framer-motion';
 import { saveUserSettings } from '@services/userSettingsService';
 import { signOut } from '@services/authService';
 import styles from './Settings.module.css';
 import theme from '@themes/theme';
+import { useAuthStore } from '@store/useAuthStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 const sectionVariants = {
@@ -50,6 +52,7 @@ function SettingsPage() {
   const updateTargetDuration = useUserSettingsStore(
     (state) => state.updateTargetDuration
   );
+  const user = useAuthStore((state) => state.user);
   const updateName = useUserSettingsStore((state) => state.updateName);
 
   const getHours = () => {
@@ -119,7 +122,6 @@ function SettingsPage() {
 
   return (
     <Box className={styles.SettingsContainer}>
-      {/* Animated Header */}
       <MotionSection className={globalStyles.Header} index={0}>
         <Settings className={globalStyles.MaterialIcon} fontSize="large" />
         <Typography variant="h2">Settings</Typography>
@@ -176,14 +178,17 @@ function SettingsPage() {
         </MotionSection>
 
         <MotionSection index={3}>
-          <BaseButton
-            sx={{ bgcolor: theme.palette.error.main }}
-            variant="contained"
-            onClick={signOut}
-            fullWidth
-          >
-            Sign Out
-          </BaseButton>
+          <Box className={styles.SettingsSection}>
+            <DeleteDataButton userId={user?.uid} />
+            <BaseButton
+              sx={{ bgcolor: theme.palette.error.main }}
+              variant="contained"
+              onClick={signOut}
+              fullWidth
+            >
+              Sign Out
+            </BaseButton>
+          </Box>
         </MotionSection>
       </Box>
 

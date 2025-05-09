@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 
 import { Timeline } from '@mui/icons-material';
-import globalStyles from '@/App.module.css';
+import globalStyles from '@themes/GlobalStyles.module.css';
 import styles from './Stats.module.css';
 
 function StatsPage() {

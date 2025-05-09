@@ -1,5 +1,3 @@
-import './App.module.css';
-
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 
 import { AppRoutes } from '@utils/constants';
