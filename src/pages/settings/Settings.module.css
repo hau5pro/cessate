@@ -52,3 +52,10 @@
   margin-top: auto;
   padding-top: 1rem;
 }
+
+.Button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}

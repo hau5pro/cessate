@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { CheckIcon, WarningIcon } from '@components/CustomIcons';
+import { CheckIcon, DeleteIcon, WarningIcon } from '@components/CustomIcons';
 import { DeletionProgress, deleteAllUserData } from '@services/deletionService';
 
 import BaseButton from '@components/BaseButton';
@@ -57,7 +57,10 @@ export default function DeleteDataButton({ userId }: Props) {
         onClick={handleShowDeletionConfirmation}
         fullWidth
       >
-        Delete My Data
+        <Box className={styles.Button}>
+          <DeleteIcon fontSize="small" className={globalStyles.MaterialIcon} />
+          <span> Delete My Data</span>
+        </Box>
       </BaseButton>
 
       {showDeleteModal && (

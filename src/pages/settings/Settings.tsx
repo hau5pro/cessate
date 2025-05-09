@@ -1,5 +1,7 @@
 import {
   AccountCircleIcon,
+  LogoutIcon,
+  SaveIcon,
   SettingsIcon,
   TimerIcon,
 } from '@components/CustomIcons';
@@ -193,7 +195,13 @@ function SettingsPage() {
               onClick={signOut}
               fullWidth
             >
-              Sign Out
+              <Box className={styles.Button}>
+                <LogoutIcon
+                  fontSize="small"
+                  className={globalStyles.MaterialIcon}
+                />
+                <span> Sign Out</span>
+              </Box>
             </BaseButton>
           </Box>
         </MotionSection>
@@ -212,7 +220,10 @@ function SettingsPage() {
           onClick={handleSave}
           fullWidth
         >
-          Save
+          <Box className={styles.Button}>
+            <SaveIcon fontSize="small" className={globalStyles.MaterialIcon} />
+            <span>Save</span>
+          </Box>
         </BaseButton>
       </motion.div>
     </Box>

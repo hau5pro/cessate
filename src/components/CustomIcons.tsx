@@ -6,6 +6,9 @@ export { default as AccountCircleIcon } from '@mui/icons-material/AccountCircle'
 export { default as TimerIcon } from '@mui/icons-material/Timer';
 export { default as CheckIcon } from '@mui/icons-material/Check';
 export { default as WarningIcon } from '@mui/icons-material/Warning';
+export { default as SaveIcon } from '@mui/icons-material/Save';
+export { default as LogoutIcon } from '@mui/icons-material/Logout';
+export { default as DeleteIcon } from '@mui/icons-material/Delete';
 
 import SvgIcon from '@mui/material/SvgIcon';
 
