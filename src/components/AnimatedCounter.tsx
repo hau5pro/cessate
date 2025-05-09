@@ -1,4 +1,4 @@
-import { Box, Typography, TypographyProps, alpha } from '@mui/material';
+import { Box, Typography, TypographyProps } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import theme from '@themes/theme';
@@ -8,15 +8,22 @@ type AnimatedCounterProps = {
   label?: string;
   duration?: number;
   format?: (val: number) => string;
+  suffix?: string;
   size?: number; // px
 } & TypographyProps;
+
+function smartFormat(val: number): string {
+  if (Number.isInteger(val)) return val.toString();
+  if (val % 1 >= 0.01) return val.toFixed(2);
+  return val.toFixed(1);
+}
 
 export default function AnimatedCounter({
   value,
   label,
   duration = 1000,
-  format = (v) => v.toString(),
-  size = 75,
+  format = smartFormat,
+  suffix,
   ...typographyProps
 }: AnimatedCounterProps) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -28,7 +35,7 @@ export default function AnimatedCounter({
     const counter = () => {
       frame++;
       const progress = Math.min(frame / totalFrames, 1);
-      const currentValue = Math.round(value * progress);
+      const currentValue = +(value * progress).toFixed(2);
       setDisplayValue(currentValue);
 
       if (progress < 1) requestAnimationFrame(counter);
@@ -38,29 +45,25 @@ export default function AnimatedCounter({
   }, [value, duration]);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
-      <Box
-        width={size}
-        height={size}
-        borderRadius="50%"
-        border={1}
-        borderColor={alpha(theme.palette.secondary.main, 0.2)}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        margin={'0.5rem auto'}
-        sx={{
-          userSelect: 'none',
-        }}
-      >
-        <Typography {...typographyProps}>{format(displayValue)}</Typography>
-      </Box>
+    <Box
+      display="flex"
+      alignItems="space-between"
+      justifyContent="space-between"
+      sx={{ userSelect: 'none' }}
+    >
       {label && (
-        <Typography variant="body2" color={theme.palette.secondary.main}>
+        <Typography variant="body2" sx={{ margin: 'auto 0' }}>
           {label}
         </Typography>
       )}
+      <Typography {...typographyProps} color={theme.palette.primary.main}>
+        {format(displayValue)}
+        {suffix && (
+          <Box component="span" sx={{ fontSize: '0.75em', marginLeft: 0.5 }}>
+            {suffix}
+          </Box>
+        )}
+      </Typography>
     </Box>
   );
 }

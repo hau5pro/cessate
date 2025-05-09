@@ -4,54 +4,55 @@ import { Constants } from '@utils/constants';
 import { create } from 'zustand';
 import dayjs from 'dayjs';
 
-type CachedStat<T> = {
-  data: T[];
+export type DailySessionsState = {
+  selectedRange: number;
+  data: DailySession[];
+  todayCount: number;
   lastFetched: number;
 };
 
-type RangeCache<T, D> = {
-  selectedRange: number;
-  cache: Record<number, CachedStat<T>>;
-} & D;
-
-export type DailySessionsState = {
-  todayCount: number;
-};
-
 export type SessionGapsState = {
-  todayGapHours: number;
+  selectedRange: number;
+  data: SessionGap[];
+  todayGapSeconds: number;
+  lastFetched: number;
 };
 
 export type StatsState = {
-  dailySessions: RangeCache<DailySession, DailySessionsState>;
-  sessionGaps: RangeCache<SessionGap, SessionGapsState>;
+  dailySessions: DailySessionsState;
+  sessionGaps: SessionGapsState;
   loading: boolean;
   hasInitialized: boolean;
+  isDirty: boolean;
 };
 
 export type StatsActions = {
   setDailySessionsRange: (range: number) => void;
   setSessionGapsRange: (range: number) => void;
-  updateDailySessions: (range: number, data: DailySession[]) => void;
-  updateSessionGaps: (range: number, data: SessionGap[]) => void;
+  updateDailySessions: (data: DailySession[]) => void;
+  updateSessionGaps: (data: SessionGap[]) => void;
   setLoading: (loading: boolean) => void;
   setHasInitialized: (initialized: boolean) => void;
+  setIsDirty: (isDirty: boolean) => void;
   reset: () => void;
 };
 
 export const useStatsStore = create<StatsState & StatsActions>((set) => ({
   dailySessions: {
     selectedRange: Constants.DEFAULT_STATS_RANGE,
-    cache: {},
+    data: [],
     todayCount: 0,
+    lastFetched: 0,
   },
   sessionGaps: {
     selectedRange: Constants.DEFAULT_STATS_RANGE,
-    cache: {},
-    todayGapHours: 0,
+    data: [],
+    todayGapSeconds: 0,
+    lastFetched: 0,
   },
   loading: false,
   hasInitialized: false,
+  isDirty: false,
 
   setDailySessionsRange: (range) =>
     set((state) => ({
@@ -63,60 +64,56 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
       sessionGaps: { ...state.sessionGaps, selectedRange: range },
     })),
 
-  updateDailySessions: (range, data) =>
-    set((state) => {
+  updateDailySessions: (data) =>
+    set(() => {
       const today = dayjs().format('YYYY-MM-DD');
-      const todayEntry = data.find((d) => d.day === today);
+      const todayCount = data.find((d) => d.day === today)?.count ?? 0;
       return {
         dailySessions: {
-          ...state.dailySessions,
-          cache: {
-            ...state.dailySessions.cache,
-            [range]: {
-              data,
-              lastFetched: Date.now(),
-            },
-          },
-          dailySessions: todayEntry?.count ?? 0,
+          selectedRange: Constants.DEFAULT_STATS_RANGE,
+          data,
+          todayCount,
+          lastFetched: Date.now(),
         },
       };
     }),
 
-  updateSessionGaps: (range, data) =>
-    set((state) => {
+  updateSessionGaps: (data) =>
+    set(() => {
       const today = dayjs().format('YYYY-MM-DD');
-      const gap = data.find((d) => d.startedAt === today);
+      const todayGaps = data.filter((d) => d.startedAt === today);
+      const total = todayGaps.reduce((sum, g) => sum + g.seconds, 0);
+      const avgSeconds = todayGaps.length ? total / todayGaps.length : 0;
       return {
         sessionGaps: {
-          ...state.sessionGaps,
-          cache: {
-            ...state.sessionGaps.cache,
-            [range]: {
-              data,
-              lastFetched: Date.now(),
-            },
-          },
-          sessionGaps: gap ? +(gap.seconds / 3600).toFixed(2) : 0,
+          selectedRange: Constants.DEFAULT_STATS_RANGE,
+          data,
+          todayGapSeconds: avgSeconds,
+          lastFetched: Date.now(),
         },
       };
     }),
 
   setLoading: (loading) => set({ loading }),
-  setHasInitialized: (hasInitialized) => set({ hasInitialized }),
+  setHasInitialized: (initialized) => set({ hasInitialized: initialized }),
+  setIsDirty: (isDirty) => set({ isDirty }),
 
   reset: () =>
     set({
       dailySessions: {
         selectedRange: Constants.DEFAULT_STATS_RANGE,
-        cache: {},
+        data: [],
         todayCount: 0,
+        lastFetched: 0,
       },
       sessionGaps: {
         selectedRange: Constants.DEFAULT_STATS_RANGE,
-        cache: {},
-        todayGapHours: 0,
+        data: [],
+        todayGapSeconds: 0,
+        lastFetched: 0,
       },
       loading: false,
       hasInitialized: false,
+      isDirty: false,
     }),
 }));

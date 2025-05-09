@@ -26,5 +26,6 @@ export class Constants {
   static ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   static DEFAULT_TARGET_DURATION = 2 * 60 * 60; // 2 hours in seconds
   static DEFAULT_STATS_RANGE = 7; // 7 days
+  static FETCH_DAYS = 30; // 30 days
   static MAX_BATCH_SIZE = 500; // firestore max batch size
 }

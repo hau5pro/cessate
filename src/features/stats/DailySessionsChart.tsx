@@ -18,7 +18,9 @@ export default function DailySessionChart() {
   const { dailySessions, setDailySessionsRange } = useStatsStore();
 
   const selectedRange = dailySessions.selectedRange;
-  const cache = dailySessions.cache[selectedRange];
+  const fullData = dailySessions.data;
+
+  const filteredData = fullData.slice(-selectedRange); // last N days
 
   const handleRangeChange = (_: any, newValue: number | null) => {
     if (newValue !== null) {
@@ -45,31 +47,33 @@ export default function DailySessionChart() {
           ))}
         </BaseToggleButtonGroup>
       </Box>
+
       <Box height={300} minHeight={300} sx={{ pointerEvents: 'none' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={cache?.data || []}
+            data={filteredData}
             margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
           >
             <XAxis
-              stroke={theme.palette.secondary.main}
               dataKey="day"
+              stroke={theme.palette.secondary.main}
               tickFormatter={(value) => dayjs(value).format('MMM DD')}
               tick={{ fontSize: 10 }}
             />
             <YAxis
+              stroke={theme.palette.secondary.main}
+              tick={{ fontSize: 10 }}
+              allowDecimals={false}
               label={{
                 value: 'Sessions',
                 angle: -90,
                 position: 'insideLeft',
+                offset: 8,
                 style: {
                   fill: theme.palette.secondary.main,
                   fontSize: 12,
                 },
               }}
-              stroke={theme.palette.secondary.main}
-              allowDecimals={false}
-              tick={{ fontSize: 10 }}
             />
             <Tooltip cursor={false} content={() => null} />
             <Bar dataKey="count" fill={theme.palette.primary.main} />

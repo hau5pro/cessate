@@ -19,7 +19,17 @@ export default function SessionGapsChart() {
   const { sessionGaps, setSessionGapsRange } = useStatsStore();
 
   const selectedRange = sessionGaps.selectedRange;
-  const cache = sessionGaps.cache[selectedRange];
+  const fullData = sessionGaps.data;
+
+  const sliced = fullData.slice(-selectedRange);
+  const transformed = transformSessionGaps(
+    sliced.map((gap) => ({
+      day: gap.startedAt,
+      seconds: gap.seconds,
+    }))
+  );
+
+  const { data: displayData, unit, domain: yDomain } = transformed;
 
   const handleRangeChange = (_: any, newValue: number | null) => {
     if (newValue !== null) {
@@ -28,18 +38,6 @@ export default function SessionGapsChart() {
   };
 
   const defaultRanges = [7, 30];
-
-  const raw = cache?.data ?? [];
-  const {
-    data: displayData,
-    unit,
-    domain: yDomain,
-  } = transformSessionGaps(
-    raw.map((gap) => ({
-      day: gap.startedAt,
-      seconds: gap.seconds,
-    }))
-  );
 
   return (
     <Box mt={4}>
@@ -88,6 +86,7 @@ export default function SessionGapsChart() {
                 value: unit.charAt(0).toUpperCase() + unit.slice(1),
                 angle: -90,
                 position: 'insideLeft',
+                offset: 8,
                 style: {
                   fill: theme.palette.secondary.main,
                   fontSize: 12,

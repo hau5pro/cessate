@@ -1,7 +1,6 @@
 import { getDailySessions, getSessionGaps } from '@services/statsService';
 
 import { Constants } from '@utils/constants';
-import dayjs from 'dayjs';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
 import { useStatsStore } from '@store/useStatsStore';
@@ -14,72 +13,52 @@ export function useLoadStats(force = false) {
     setLoading,
     updateDailySessions,
     updateSessionGaps,
+    isDirty,
+    setIsDirty,
   } = useStatsStore();
 
   useEffect(() => {
     if (!user?.uid) return;
 
-    const { selectedRange: dailyRange, cache: dailyCache } = dailySessions;
-    const { selectedRange: gapRange, cache: gapCache } = sessionGaps;
-
     const isStale = (lastFetched?: number) =>
       !lastFetched || Date.now() - lastFetched > Constants.ONE_DAY_IN_MS;
 
-    const isDailyStale = force || isStale(dailyCache[dailyRange]?.lastFetched);
-    const isGapStale = force || isStale(gapCache[gapRange]?.lastFetched);
+    const needsDaily = force || isStale(dailySessions.lastFetched) || isDirty;
+    const needsGaps = force || isStale(sessionGaps.lastFetched) || isDirty;
 
     const promises: Promise<void>[] = [];
+
     setLoading(true);
 
-    const today = dayjs().utc().format('YYYY-MM-DD');
-
-    if (isDailyStale) {
+    if (needsDaily) {
       promises.push(
-        getDailySessions(user.uid, dailyRange).then((data) => {
-          const todayEntry = data.find((d) => d.day === today);
-          updateDailySessions(dailyRange, data);
-
-          // Directly update derived value
-          useStatsStore.setState((state) => ({
-            dailySessions: {
-              ...state.dailySessions,
-              todayCount: todayEntry?.count ?? 0,
-            },
-          }));
+        getDailySessions(user.uid, Constants.FETCH_DAYS).then((data) => {
+          updateDailySessions(data);
         })
       );
     }
 
-    if (isGapStale) {
+    if (needsGaps) {
       promises.push(
-        getSessionGaps(user.uid, gapRange).then((data) => {
-          const todayGap = data.find((g) => g.startedAt === today);
-          updateSessionGaps(gapRange, data);
-
-          useStatsStore.setState((state) => ({
-            sessionGaps: {
-              ...state.sessionGaps,
-              todayGapHours: todayGap
-                ? +(todayGap.seconds / 3600).toFixed(2)
-                : 0,
-            },
-          }));
+        getSessionGaps(user.uid, Constants.FETCH_DAYS).then((data) => {
+          updateSessionGaps(data);
         })
       );
     }
 
-    Promise.all(promises).finally(() => setLoading(false));
+    Promise.all(promises).finally(() => {
+      setLoading(false);
+      setIsDirty(false);
+    });
   }, [
     user?.uid,
-    dailySessions.selectedRange,
-    sessionGaps.selectedRange,
-    dailySessions.cache,
-    sessionGaps.cache,
-    setLoading,
+    force,
+    isDirty,
+    dailySessions.lastFetched,
+    sessionGaps.lastFetched,
     updateDailySessions,
     updateSessionGaps,
-    force,
-    dailySessions,
-    sessionGaps,
+    setLoading,
+    setIsDirty,
   ]);
 }
