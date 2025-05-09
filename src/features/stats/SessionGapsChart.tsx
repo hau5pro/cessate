@@ -72,12 +72,12 @@ export default function SessionGapsChart() {
               dataKey="day"
               stroke={theme.palette.secondary.main}
               tickFormatter={(value) => dayjs(value).format('MMM DD')}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 10 }}
             />
             <YAxis
               domain={yDomain}
               stroke={theme.palette.secondary.main}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 10 }}
               allowDecimals
               tickFormatter={(v) =>
                 unit === 'minutes' ? `${v}` : v.toFixed(1)
