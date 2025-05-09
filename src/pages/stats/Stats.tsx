@@ -69,7 +69,7 @@ function StatsPage() {
           <MotionSection index={1}>
             <AnimatedCounter
               value={todaysDailySessions}
-              suffix="days"
+              suffix="sessions"
               label="Sessions Today"
               variant="subtitle1"
             />
