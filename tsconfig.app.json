@@ -35,7 +35,8 @@
       "@utils/*": ["src/utils/*"],
       "@layouts/*": ["src/layouts/*"],
       "@services/*": ["src/services/*"],
-      "@themes/*": ["src/themes/*"]
+      "@themes/*": ["src/themes/*"],
+      "@hooks/*": ["src/hooks/*"]
     }
   },
   "include": ["src"]
