@@ -80,7 +80,7 @@ function RelapseButton() {
         <Box
           sx={{
             position: 'absolute',
-            right: 64,
+            right: 24,
             top: '50%',
             transform: 'translateY(-50%)',
             opacity: loading ? 1 : 0,
