@@ -23,7 +23,6 @@ export type StatsState = {
   sessionGaps: SessionGapsState;
   loading: boolean;
   hasInitialized: boolean;
-  isDirty: boolean;
 };
 
 export type StatsActions = {
@@ -33,7 +32,6 @@ export type StatsActions = {
   updateSessionGaps: (data: SessionGap[]) => void;
   setLoading: (loading: boolean) => void;
   setHasInitialized: (initialized: boolean) => void;
-  setIsDirty: (isDirty: boolean) => void;
   reset: () => void;
 };
 
@@ -52,7 +50,6 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
   },
   loading: false,
   hasInitialized: false,
-  isDirty: false,
 
   setDailySessionsRange: (range) =>
     set((state) => ({
@@ -96,7 +93,6 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
 
   setLoading: (loading) => set({ loading }),
   setHasInitialized: (initialized) => set({ hasInitialized: initialized }),
-  setIsDirty: (isDirty) => set({ isDirty }),
 
   reset: () =>
     set({
@@ -114,6 +110,5 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
       },
       loading: false,
       hasInitialized: false,
-      isDirty: false,
     }),
 }));

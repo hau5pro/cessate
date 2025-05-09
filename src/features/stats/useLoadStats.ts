@@ -13,8 +13,6 @@ export function useLoadStats(force = false) {
     setLoading,
     updateDailySessions,
     updateSessionGaps,
-    isDirty,
-    setIsDirty,
   } = useStatsStore();
 
   useEffect(() => {
@@ -23,42 +21,38 @@ export function useLoadStats(force = false) {
     const isStale = (lastFetched?: number) =>
       !lastFetched || Date.now() - lastFetched > Constants.ONE_DAY_IN_MS;
 
-    const needsDaily = force || isStale(dailySessions.lastFetched) || isDirty;
-    const needsGaps = force || isStale(sessionGaps.lastFetched) || isDirty;
+    const needsDaily = force || isStale(dailySessions.lastFetched);
+    const needsGaps = force || isStale(sessionGaps.lastFetched);
+
+    if (!needsDaily && !needsGaps) return;
 
     const promises: Promise<void>[] = [];
-
     setLoading(true);
 
     if (needsDaily) {
       promises.push(
-        getDailySessions(user.uid, Constants.FETCH_DAYS).then((data) => {
-          updateDailySessions(data);
-        })
+        getDailySessions(user.uid, Constants.FETCH_DAYS).then(
+          updateDailySessions
+        )
       );
     }
 
     if (needsGaps) {
       promises.push(
-        getSessionGaps(user.uid, Constants.FETCH_DAYS).then((data) => {
-          updateSessionGaps(data);
-        })
+        getSessionGaps(user.uid, Constants.FETCH_DAYS).then(updateSessionGaps)
       );
     }
 
     Promise.all(promises).finally(() => {
       setLoading(false);
-      setIsDirty(false);
     });
   }, [
     user?.uid,
     force,
-    isDirty,
     dailySessions.lastFetched,
     sessionGaps.lastFetched,
     updateDailySessions,
     updateSessionGaps,
     setLoading,
-    setIsDirty,
   ]);
 }
