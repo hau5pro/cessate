@@ -6,7 +6,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Box, Typography, alpha } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import BaseToggleButton from '@components/BaseToggleButton';
 import BaseToggleButtonGroup from '@components/BaseToggleButtonGroup';
@@ -45,7 +45,7 @@ export default function DailySessionChart() {
           ))}
         </BaseToggleButtonGroup>
       </Box>
-      <Box height={300}>
+      <Box height={300} sx={{ pointerEvents: 'none' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={cache?.data || []}
@@ -62,25 +62,7 @@ export default function DailySessionChart() {
               allowDecimals={false}
               tick={{ fontSize: 12 }}
             />
-            <Tooltip
-              cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
-              contentStyle={{
-                backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                backdropFilter: 'blur(10px)',
-                border: `1px solid ${alpha(theme.palette.secondary.main, 0.5)}`,
-                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
-              }}
-              labelStyle={{
-                textAlign: 'center',
-                color: theme.palette.secondary.main,
-              }}
-              itemStyle={{
-                textAlign: 'center',
-                color: theme.palette.common.white,
-              }}
-              labelFormatter={(label) => dayjs(label).format('MMM DD')}
-              formatter={(value: number) => [`${value} sessions`]}
-            />
+            <Tooltip cursor={false} content={() => null} />
             <Bar dataKey="count" fill={theme.palette.primary.main} />
           </BarChart>
         </ResponsiveContainer>
