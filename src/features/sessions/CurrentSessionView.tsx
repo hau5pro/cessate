@@ -36,11 +36,15 @@ function CurrentSessionView() {
   const createdAt = (session.createdAt as Timestamp).toDate();
   const targetEnd = dayjs(createdAt).add(session.targetDuration, 'second');
   const timeLeft = dayjs.duration(Math.max(targetEnd.diff(now), 0));
-  const timePassed = dayjs.duration(now.diff(createdAt));
-  const percent = Math.min(
-    100,
-    (timePassed.asSeconds() / session.targetDuration) * 100
-  );
+  const timePassed = dayjs.duration(Math.max(now.diff(createdAt), 0));
+
+  const passedSeconds = timePassed.asSeconds();
+  const duration = session.targetDuration;
+  const percent =
+    duration > 0
+      ? Math.min(100, Math.max(0, (passedSeconds / duration) * 100))
+      : 0;
+
   const normalizedPercent = percent / 100;
 
   return (

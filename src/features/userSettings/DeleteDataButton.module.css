@@ -11,6 +11,11 @@
 
 .Modal,
 .ConfirmBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
   background-color: #121212;
   padding: 2rem;
   border-radius: 16px;
