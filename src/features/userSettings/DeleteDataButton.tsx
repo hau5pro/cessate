@@ -4,6 +4,7 @@ import { DeletionProgress, deleteAllUserData } from '@services/deletionService';
 
 import BaseButton from '@components/BaseButton';
 import globalStyles from '@themes/GlobalStyles.module.css';
+import { signOut } from '@services/authService';
 import styles from './DeleteDataButton.module.css';
 import theme from '@themes/theme';
 import { useState } from 'react';
@@ -40,6 +41,12 @@ export default function DeleteDataButton({ userId }: Props) {
 
     setDeleteProgress(null);
     setDeletionDone(true);
+  };
+
+  const handleCompleteDeletion = async () => {
+    setShowDeleteModal(false);
+    setDeletionDone(false);
+    await signOut();
   };
 
   return (
@@ -80,10 +87,7 @@ export default function DeleteDataButton({ userId }: Props) {
                 <BaseButton
                   variant="contained"
                   color="success"
-                  onClick={() => {
-                    setShowDeleteModal(false);
-                    setDeletionDone(false);
-                  }}
+                  onClick={handleCompleteDeletion}
                 >
                   OK
                 </BaseButton>
