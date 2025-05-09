@@ -68,7 +68,15 @@ export default function DeleteDataButton({ userId }: Props) {
                 <Typography variant="h5" mb={2}>
                   Deleting Your Data
                 </Typography>
-                <Typography variant="body1" mb={2}>
+                <Typography
+                  variant="body1"
+                  mb={2}
+                  sx={{
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                    maxWidth: '100%',
+                  }}
+                >
                   {deleteProgress
                     ? `${deleteProgress.deleted} / ${deleteProgress.total} deleted from ${deleteProgress.collectionPath}`
                     : 'Starting'}

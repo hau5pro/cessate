@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { incrementDailySession, logSessionGap } from './statsService';
 
+import { ColorUtils } from '@utils/colorUtils';
 import { DB } from '@utils/constants';
 import { Session } from '@features/sessions/session';
 import { db } from '@lib/firebase/firebase';
@@ -33,6 +34,9 @@ export const startNewSession = (
     createdAt: Timestamp.now(),
     endedAt: null,
     targetDuration,
+    percentage: null,
+    duration: null,
+    color: null,
   };
 
   batch.set(sessionRef, session);
@@ -54,8 +58,16 @@ export const logRelapseAndStartSession = (
   const previousRef = doc(sessionCollection, previousSession.id);
   const now = Timestamp.now();
 
+  const duration = now.seconds - previousSession.createdAt.seconds;
+  const normalizedPercent = duration / previousSession.targetDuration;
+  const color = ColorUtils.interpolateColor(normalizedPercent);
+  const percentage = Math.round(normalizedPercent * 100);
+
   batch.update(previousRef, {
     endedAt: now,
+    duration,
+    percentage,
+    color,
   });
 
   const newSession = startNewSession(userId, targetDuration, batch);

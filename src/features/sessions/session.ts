@@ -5,6 +5,7 @@ export interface Session {
   createdAt: Timestamp;
   endedAt: Timestamp | null;
   targetDuration: number;
-  // duration?: number;
-  // color?: string;
+  percentage: number | null;
+  duration: number | null;
+  color: string | null;
 }
