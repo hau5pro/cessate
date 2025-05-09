@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
+import { Check, Warning } from '@mui/icons-material';
 import { DeletionProgress, deleteAllUserData } from '@services/deletionService';
 
 import BaseButton from '@components/BaseButton';
-import { Warning } from '@mui/icons-material';
 import globalStyles from '@themes/GlobalStyles.module.css';
 import styles from './DeleteDataButton.module.css';
 import theme from '@themes/theme';
@@ -18,6 +18,7 @@ export default function DeleteDataButton({ userId }: Props) {
   const [deleteProgress, setDeleteProgress] = useState<DeletionProgress | null>(
     null
   );
+  const [deletionDone, setDeletionDone] = useState(false);
 
   const handleShowDeletionConfirmation = () => {
     setConfirming(true);
@@ -37,8 +38,8 @@ export default function DeleteDataButton({ userId }: Props) {
       setDeleteProgress(progress);
     });
 
-    setShowDeleteModal(false);
     setDeleteProgress(null);
+    setDeletionDone(true);
   };
 
   return (
@@ -55,14 +56,39 @@ export default function DeleteDataButton({ userId }: Props) {
       {showDeleteModal && (
         <Box className={styles.ModalBackdrop}>
           <Box className={styles.Modal}>
-            <Typography variant="h4" mb={2}>
-              Deleting Your Data...
-            </Typography>
-            <Typography variant="body1" mb={2}>
-              {deleteProgress
-                ? `${deleteProgress.deleted} / ${deleteProgress.total} deleted from ${deleteProgress.collectionPath}`
-                : 'Starting...'}
-            </Typography>
+            {!deletionDone ? (
+              <>
+                <Typography variant="h5" mb={2}>
+                  Deleting Your Data
+                </Typography>
+                <Typography variant="body1" mb={2}>
+                  {deleteProgress
+                    ? `${deleteProgress.deleted} / ${deleteProgress.total} deleted from ${deleteProgress.collectionPath}`
+                    : 'Starting'}
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Check
+                  className={globalStyles.MaterialIcon}
+                  fontSize="large"
+                  sx={{ color: theme.palette.success.main }}
+                />
+                <Typography variant="h5" mb={2}>
+                  Deletion Complete
+                </Typography>
+                <BaseButton
+                  variant="contained"
+                  color="success"
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeletionDone(false);
+                  }}
+                >
+                  OK
+                </BaseButton>
+              </>
+            )}
           </Box>
         </Box>
       )}
@@ -70,7 +96,11 @@ export default function DeleteDataButton({ userId }: Props) {
       {confirming && (
         <Box className={styles.ConfirmBackdrop}>
           <Box className={styles.ConfirmBox}>
-            <Warning className={globalStyles.MaterialIcon} fontSize="large" />
+            <Warning
+              className={globalStyles.MaterialIcon}
+              fontSize="large"
+              sx={{ color: theme.palette.warning.main }}
+            />
             <Typography variant="h5" mb={2}>
               Are you sure you want to delete all your data?
             </Typography>
