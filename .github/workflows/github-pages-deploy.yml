@@ -31,12 +31,6 @@ jobs:
             echo VITE_FIREBASE_APP_ID="${{ secrets.FIREBASE_APP_ID }}"
           } >> .env 2>/dev/null
 
-      - name: Confirm .env and vite.config.ts are in same dir
-        run: |
-          ls -la
-          cat .env
-          cat vite.config.ts | grep import.meta.env || true
-
       - name: Build project
         run: npm run build
 
