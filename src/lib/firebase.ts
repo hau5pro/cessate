@@ -39,9 +39,3 @@ export async function runSessionTransaction<T>(
   await batch.commit();
   return result;
 }
-
-export function getCollectionRef(
-  ...pathSegments: [string, ...string[]]
-): CollectionReference<DocumentData> {
-  return collection(db, ...pathSegments);
-}

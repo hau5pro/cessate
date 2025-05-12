@@ -239,7 +239,7 @@ export function formatDuration(seconds: number): {
 }
 
 export async function getStatsMeta(uid: string): Promise<StatsMeta> {
-  const metaRef = doc(db, `${DB.USER_STATS}/${uid}/${DB.STATS_META}`);
+  const metaRef = doc(db, `${DB.USER_STATS}/${uid}/${DB.META}/${DB.STATS}`);
   const snap = await getDoc(metaRef);
 
   if (!snap.exists()) return { lastUpdated: null };
@@ -251,7 +251,7 @@ export async function getStatsMeta(uid: string): Promise<StatsMeta> {
 }
 
 function updateStatsMeta(batch: WriteBatch, userId: string) {
-  const metaRef = doc(db, `${DB.USER_STATS}/${userId}/${DB.STATS_META}`);
+  const metaRef = doc(db, `${DB.USER_STATS}/${userId}/${DB.META}/${DB.STATS}`);
   batch.set(
     metaRef,
     {
