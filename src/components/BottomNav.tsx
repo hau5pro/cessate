@@ -44,6 +44,8 @@ export default function BottomNav({ className }: BottomNavProps) {
         sx={{
           bgcolor: 'transparent',
           backdropFilter: 'blur(10px)',
+          height: '4rem',
+          paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + 12px)`,
           '& .MuiBottomNavigationAction-root': {
             color: theme.palette.secondary.dark,
             boxShadow: 'none',
