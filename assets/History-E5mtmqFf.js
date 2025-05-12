@@ -1,0 +1,1 @@
+import{j as s,B as o,e as r,d as t}from"./mui-VNDw4GbL.js";import{g as a}from"./GlobalStyles.module-D1S20KA9.js";const e="_HistoryContainer_1qcvp_1",i={HistoryContainer:e};function c(){return s.jsx(o,{className:i.HistoryContainer,children:s.jsxs(r,{className:a.Header,variant:"h2",children:[s.jsx(t,{className:a.MaterialIcon,fontSize:"large"}),"History"]})})}export{c as default};
