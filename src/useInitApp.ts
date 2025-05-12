@@ -1,5 +1,9 @@
+import {
+  createUserSettings,
+  getUserSettings,
+} from '@services/userSettingsService';
+
 import { getCurrentSession } from '@services/sessionsService';
-import { getUserSettings } from '@services/userSettingsService';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
 import { useSessionStore } from '@store/useSessionStore';
@@ -45,10 +49,12 @@ export const useInitApp = () => {
       if (hasInitializedSettings) return;
 
       try {
-        const userSettings = await getUserSettings(user.uid);
-        if (userSettings) {
-          setSettings(userSettings);
+        let userSettings = await getUserSettings(user.uid);
+        if (!userSettings) {
+          userSettings = await createUserSettings(user);
         }
+
+        setSettings(userSettings);
       } catch (err) {
         console.error('Error loading user settings:', err);
       } finally {
