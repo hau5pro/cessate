@@ -2,8 +2,10 @@ import {
   createUserSettings,
   getUserSettings,
 } from '@services/userSettingsService';
+import { getStatsMeta, updateStatsMeta } from '@services/statsService';
 
 import { getCurrentSession } from '@services/sessionsService';
+import { runSessionTransaction } from '@lib/firebase';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
 import { useSessionStore } from '@store/useSessionStore';
@@ -62,8 +64,23 @@ export const useInitApp = () => {
       }
     };
 
+    const loadStatsMeta = async () => {
+      try {
+        const meta = await getStatsMeta(user.uid);
+
+        if (!meta) {
+          await runSessionTransaction(async (batch) => {
+            updateStatsMeta(batch, user.uid);
+          });
+        }
+      } catch (err) {
+        console.error('Error loading stats meta:', err);
+      }
+    };
+
     loadSession();
     loadSettings();
+    loadStatsMeta();
   }, [
     user,
     hasInitializedSession,

@@ -3,42 +3,43 @@ import {
   getSessionGaps,
   getStatsMeta,
 } from '@services/statsService';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { Constants } from '@utils/constants';
 import { useAuthStore } from '@store/useAuthStore';
 import { useStatsStore } from '@store/useStatsStore';
 
 export function useLoadStats() {
-  const user = useAuthStore((s) => s.user);
-  const {
-    dailySessions,
-    sessionGaps,
-    setLoading,
-    updateDailySessions,
-    updateSessionGaps,
-  } = useStatsStore();
+  const hasLoadedRef = useRef(false);
+  const uid = useAuthStore((s) => s.user?.uid);
+  const dailyLastFetched = useStatsStore((s) => s.dailySessions.lastFetched);
+  const gapsLastFetched = useStatsStore((s) => s.sessionGaps.lastFetched);
+  const updateDailySessions = useStatsStore((s) => s.updateDailySessions);
+  const updateSessionGaps = useStatsStore((s) => s.updateSessionGaps);
+  const setLoading = useStatsStore((s) => s.setLoading);
 
   const load = useCallback(
     async (force = false) => {
-      if (!user?.uid) return;
+      if (!uid) return;
 
       setLoading(true);
 
       try {
-        const meta = await getStatsMeta(user.uid);
-        const updatedAt = meta.lastUpdated?.toMillis() ?? 0;
+        const meta = await getStatsMeta(uid);
+        const updatedAt = meta?.lastUpdated?.toMillis() ?? 0;
         const latestFetch = Math.max(
-          dailySessions.lastFetched ?? 0,
-          sessionGaps.lastFetched ?? 0
+          dailyLastFetched ?? 0,
+          gapsLastFetched ?? 0
         );
 
-        const shouldRefetch = force || updatedAt > latestFetch;
+        const shouldRefetch =
+          force || updatedAt === 0 || updatedAt > latestFetch;
+
         if (!shouldRefetch) return;
 
         const [daily, gaps] = await Promise.all([
-          getDailySessions(user.uid, Constants.FETCH_DAYS),
-          getSessionGaps(user.uid, Constants.FETCH_DAYS),
+          getDailySessions(uid, Constants.FETCH_DAYS),
+          getSessionGaps(uid, Constants.FETCH_DAYS),
         ]);
 
         updateDailySessions(daily);
@@ -47,17 +48,13 @@ export function useLoadStats() {
         setLoading(false);
       }
     },
-    [
-      user?.uid,
-      dailySessions.lastFetched,
-      sessionGaps.lastFetched,
-      updateDailySessions,
-      updateSessionGaps,
-      setLoading,
-    ]
+    [uid]
   );
 
   useEffect(() => {
+    if (hasLoadedRef.current) return;
+
+    hasLoadedRef.current = true;
     load();
   }, [load]);
 
