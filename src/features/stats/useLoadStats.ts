@@ -1,4 +1,8 @@
-import { getDailySessions, getSessionGaps } from '@services/statsService';
+import {
+  getDailySessions,
+  getSessionGaps,
+  getStatsMeta,
+} from '@services/statsService';
 import { useCallback, useEffect } from 'react';
 
 import { Constants } from '@utils/constants';
@@ -19,33 +23,29 @@ export function useLoadStats() {
     async (force = false) => {
       if (!user?.uid) return;
 
-      const isStale = (lastFetched?: number) =>
-        !lastFetched || Date.now() - lastFetched > Constants.ONE_DAY_IN_MS;
-
-      const needsDaily = force || isStale(dailySessions.lastFetched);
-      const needsGaps = force || isStale(sessionGaps.lastFetched);
-
-      if (!needsDaily && !needsGaps) return;
-
-      const promises: Promise<void>[] = [];
       setLoading(true);
 
-      if (needsDaily) {
-        promises.push(
-          getDailySessions(user.uid, Constants.FETCH_DAYS).then(
-            updateDailySessions
-          )
+      try {
+        const meta = await getStatsMeta(user.uid);
+        const updatedAt = meta.lastUpdated?.toMillis() ?? 0;
+        const latestFetch = Math.max(
+          dailySessions.lastFetched ?? 0,
+          sessionGaps.lastFetched ?? 0
         );
-      }
 
-      if (needsGaps) {
-        promises.push(
-          getSessionGaps(user.uid, Constants.FETCH_DAYS).then(updateSessionGaps)
-        );
-      }
+        const shouldRefetch = force || updatedAt > latestFetch;
+        if (!shouldRefetch) return;
 
-      await Promise.all(promises);
-      setLoading(false);
+        const [daily, gaps] = await Promise.all([
+          getDailySessions(user.uid, Constants.FETCH_DAYS),
+          getSessionGaps(user.uid, Constants.FETCH_DAYS),
+        ]);
+
+        updateDailySessions(daily);
+        updateSessionGaps(gaps);
+      } finally {
+        setLoading(false);
+      }
     },
     [
       user?.uid,

@@ -1,10 +1,15 @@
-import { DailySession, SessionGapSummary } from '@features/stats/stats';
+import {
+  DailySession,
+  SessionGapSummary,
+  StatsMeta,
+} from '@features/stats/stats';
 import {
   Timestamp,
   WriteBatch,
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   orderBy,
@@ -32,6 +37,8 @@ export function incrementDailySession(batch: WriteBatch, userId: string): void {
     },
     { merge: true }
   );
+
+  updateStatsMeta(batch, userId);
 }
 
 export async function getDailySessions(
@@ -41,7 +48,7 @@ export async function getDailySessions(
   const sinceDate = getUtcDayKey(dayjs().subtract(rangeInDays, 'day'));
 
   const q = query(
-    collection(db, `user_stats/${uid}/daily_sessions`),
+    collection(db, `${DB.USER_STATS}/${uid}/${DB.DAILY_SESSIONS}`),
     where('day', '>=', sinceDate),
     orderBy('day')
   );
@@ -107,6 +114,8 @@ export function logSessionGap(
     { merge: true }
   );
 
+  updateStatsMeta(batch, userId);
+
   return {
     day: dayKey,
     gaps: gaps,
@@ -124,7 +133,7 @@ export async function getSessionGaps(
   ).toDate();
 
   const q = query(
-    collection(db, `user_stats/${uid}/session_gaps`),
+    collection(db, `${DB.USER_STATS}/${uid}/${DB.SESSION_GAPS}`),
     where('day', '>=', sinceDate),
     orderBy('day', 'asc')
   );
@@ -227,4 +236,27 @@ export function formatDuration(seconds: number): {
   if (seconds < 86400)
     return { value: +(seconds / 3600).toFixed(2), unit: 'hours' };
   return { value: +(seconds / 86400).toFixed(2), unit: 'days' };
+}
+
+export async function getStatsMeta(uid: string): Promise<StatsMeta> {
+  const metaRef = doc(db, `${DB.USER_STATS}/${uid}/${DB.STATS_META}`);
+  const snap = await getDoc(metaRef);
+
+  if (!snap.exists()) return { lastUpdated: null };
+
+  const data = snap.data();
+  return {
+    lastUpdated: data?.lastUpdated ?? null,
+  };
+}
+
+function updateStatsMeta(batch: WriteBatch, userId: string) {
+  const metaRef = doc(db, `${DB.USER_STATS}/${userId}/${DB.STATS_META}`);
+  batch.set(
+    metaRef,
+    {
+      lastUpdated: Timestamp.now(),
+    },
+    { merge: true }
+  );
 }

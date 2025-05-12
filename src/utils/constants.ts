@@ -3,6 +3,7 @@ export class DB {
   static USER_SESSIONS = 'user_sessions';
   static SESSIONS = 'sessions';
   static USER_STATS = 'user_stats';
+  static STATS_META = 'stats_meta';
   static DAILY_SESSIONS = 'daily_sessions';
   static SESSION_GAPS = 'session_gaps';
 }

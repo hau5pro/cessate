@@ -1,5 +1,9 @@
 import { Timestamp } from 'firebase/firestore';
 
+export type StatsMeta = {
+  lastUpdated: Timestamp | null;
+};
+
 export type DailySession = {
   day: string; // YYYY-MM-DD
   count: number;
