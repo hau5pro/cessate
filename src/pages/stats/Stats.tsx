@@ -8,8 +8,10 @@ import { formatDuration } from '@services/statsService';
 import globalStyles from '@themes/GlobalStyles.module.css';
 import { motion } from 'framer-motion';
 import styles from './Stats.module.css';
+import theme from '@themes/theme';
 import { useLoadStats } from '@features/stats/useLoadStats';
 import { useStatsStore } from '@store/useStatsStore';
+import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 const sectionVariants = {
   hidden: { opacity: 0, x: -20 },
@@ -41,6 +43,7 @@ const MotionSection = ({
 );
 
 function StatsPage() {
+  const name = useUserSettingsStore((s) => s.settings?.name);
   const todaysDailySessions = useStatsStore((s) => s.dailySessions.todayCount);
   const todaysGapSeconds = useStatsStore((s) => s.sessionGaps.todayGapSeconds);
   const { value: formattedGapValue, unit: formattedGapUnit } =
@@ -50,22 +53,31 @@ function StatsPage() {
 
   return (
     <Box className={styles.StatsContainer}>
+      <MotionSection index={0}>
+        <Typography className={globalStyles.Header} variant="h2">
+          <TimelineIcon
+            className={globalStyles.MaterialIcon}
+            fontSize="large"
+          />
+          Stats
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              flex: 1,
+              color: theme.palette.secondary.main,
+            }}
+          >
+            {name}
+          </Box>
+        </Typography>
+      </MotionSection>
       <Box className={styles.StatsContent}>
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <MotionSection index={0}>
-            <Typography className={globalStyles.Header} variant="h2">
-              <TimelineIcon
-                className={globalStyles.MaterialIcon}
-                fontSize="large"
-              />
-              Stats
-            </Typography>
-          </MotionSection>
-
           <MotionSection index={1}>
             <AnimatedCounter
               value={todaysDailySessions}
