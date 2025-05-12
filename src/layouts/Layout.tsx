@@ -20,7 +20,7 @@ function Layout() {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          margin: '0.75rem',
+          margin: { sm: '0.75rem' },
         }}
       >
         <header style={{ padding: '0.5rem', textAlign: 'center' }}>
