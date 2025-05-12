@@ -10,7 +10,7 @@ import {
 
 import BaseToggleButton from '@components/BaseToggleButton';
 import BaseToggleButtonGroup from '@components/BaseToggleButtonGroup';
-import dayjs from 'dayjs';
+import { dayjs } from '@lib/dayjs';
 import theme from '@themes/theme';
 import { transformSessionGaps } from '@services/statsService';
 import { useStatsStore } from '@store/useStatsStore';
@@ -22,12 +22,7 @@ export default function SessionGapsChart() {
   const fullData = sessionGaps.data;
 
   const sliced = fullData.slice(-selectedRange);
-  const transformed = transformSessionGaps(
-    sliced.map((gap) => ({
-      day: gap.startedAt,
-      seconds: gap.seconds,
-    }))
-  );
+  const transformed = transformSessionGaps(sliced);
 
   const { data: displayData, unit, domain: yDomain } = transformed;
 
@@ -71,7 +66,9 @@ export default function SessionGapsChart() {
             <XAxis
               dataKey="day"
               stroke={theme.palette.secondary.main}
-              tickFormatter={(value) => dayjs(value).format('MMM DD')}
+              tickFormatter={(value) =>
+                dayjs.utc(value).local().format('MMM DD')
+              }
               tick={{ fontSize: 10 }}
             />
             <YAxis

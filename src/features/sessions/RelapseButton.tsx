@@ -1,20 +1,39 @@
 import BaseButton from '@components/BaseButton';
 import { Box } from '@mui/material';
 import Loading from '@components/Loading';
+import { Timestamp } from 'firebase/firestore';
+import { getUtcDayKey } from '@lib/dayjs';
 import { logRelapseAndStartSession } from '@services/sessionsService';
-import { runSessionTransaction } from '@lib/firebase/firebase';
+import { runSessionTransaction } from '@lib/firebase';
 import { useAuthStore } from '@store/useAuthStore';
 import { useSessionStore } from '@store/useSessionStore';
+import { useStatsStore } from '@store/useStatsStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 function RelapseButton() {
+  const todayKey = getUtcDayKey();
   const user = useAuthStore((state) => state.user);
+
+  const targetDuration = useUserSettingsStore(
+    (state) => state.settings?.targetDuration
+  );
+
   const session = useSessionStore((state) => state.currentSession);
   const setCurrentSession = useSessionStore((state) => state.setCurrentSession);
   const loading = useSessionStore((state) => state.loading);
   const setLoading = useSessionStore((state) => state.setLoading);
-  const targetDuration = useUserSettingsStore(
-    (state) => state.settings?.targetDuration
+
+  const todaysGapSummary = useStatsStore((state) =>
+    state.sessionGaps.data.find((d) => d.day === todayKey)
+  );
+  const updateTodaySessionGapSummary = useStatsStore(
+    (state) => state.updateTodaySessionGapSummary
+  );
+  const todaysDailySessions = useStatsStore((state) =>
+    state.dailySessions.data.find((d) => d.day === todayKey)
+  );
+  const updateTodayDailySession = useStatsStore(
+    (state) => state.updateTodayDailySession
   );
 
   const handleRelapse = async () => {
@@ -23,13 +42,24 @@ function RelapseButton() {
     try {
       setLoading(true);
 
-      const newSession = await runSessionTransaction(async (batch) => {
-        return logRelapseAndStartSession(
-          user.uid,
-          session,
-          targetDuration,
-          batch
-        );
+      const { session: newSession, gapSummary } = await runSessionTransaction(
+        async (batch) => {
+          return logRelapseAndStartSession(
+            user.uid,
+            session,
+            targetDuration,
+            batch,
+            todaysGapSummary
+          );
+        }
+      );
+
+      updateTodaySessionGapSummary(gapSummary);
+      const updatedCount = (todaysDailySessions?.count ?? 0) + 1;
+      updateTodayDailySession({
+        day: todayKey,
+        count: updatedCount,
+        updatedAt: Timestamp.now(),
       });
 
       setCurrentSession(newSession);

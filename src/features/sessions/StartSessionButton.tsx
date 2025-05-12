@@ -1,5 +1,5 @@
 import BaseButton from '@components/BaseButton';
-import { runSessionTransaction } from '@lib/firebase/firebase';
+import { runSessionTransaction } from '@lib/firebase';
 import { startNewSession } from '@services/sessionsService';
 import { useAuthStore } from '@store/useAuthStore';
 import { useSessionStore } from '@store/useSessionStore';

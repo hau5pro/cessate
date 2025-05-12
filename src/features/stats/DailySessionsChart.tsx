@@ -10,7 +10,7 @@ import { Box, Typography } from '@mui/material';
 
 import BaseToggleButton from '@components/BaseToggleButton';
 import BaseToggleButtonGroup from '@components/BaseToggleButtonGroup';
-import dayjs from 'dayjs';
+import { dayjs } from '@lib/dayjs';
 import theme from '@themes/theme';
 import { useStatsStore } from '@store/useStatsStore';
 
@@ -57,7 +57,9 @@ export default function DailySessionChart() {
             <XAxis
               dataKey="day"
               stroke={theme.palette.secondary.main}
-              tickFormatter={(value) => dayjs(value).format('MMM DD')}
+              tickFormatter={(value) =>
+                dayjs.utc(value).local().format('MMM DD')
+              }
               tick={{ fontSize: 10 }}
             />
             <YAxis

@@ -1,4 +1,4 @@
-import { auth, googleProvider } from '@lib/firebase/firebase';
+import { auth, googleProvider } from '@lib/firebase';
 import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
 
 import { resetAllStores } from '@store/resetAllStores';

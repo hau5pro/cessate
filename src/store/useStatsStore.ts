@@ -1,8 +1,8 @@
-import { DailySession, SessionGap } from '@features/stats/stats';
+import { DailySession, SessionGapSummary } from '@features/stats/stats';
 
 import { Constants } from '@utils/constants';
 import { create } from 'zustand';
-import dayjs from 'dayjs';
+import { getUtcDayKey } from '@lib/dayjs';
 
 export type DailySessionsState = {
   selectedRange: number;
@@ -13,7 +13,7 @@ export type DailySessionsState = {
 
 export type SessionGapsState = {
   selectedRange: number;
-  data: SessionGap[];
+  data: SessionGapSummary[];
   todayGapSeconds: number;
   lastFetched: number;
 };
@@ -29,7 +29,9 @@ export type StatsActions = {
   setDailySessionsRange: (range: number) => void;
   setSessionGapsRange: (range: number) => void;
   updateDailySessions: (data: DailySession[]) => void;
-  updateSessionGaps: (data: SessionGap[]) => void;
+  updateSessionGaps: (data: SessionGapSummary[]) => void;
+  updateTodayDailySession: (updated: DailySession) => void;
+  updateTodaySessionGapSummary: (updated: SessionGapSummary) => void;
   setLoading: (loading: boolean) => void;
   setHasInitialized: (initialized: boolean) => void;
   reset: () => void;
@@ -63,7 +65,7 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
 
   updateDailySessions: (data) =>
     set(() => {
-      const today = dayjs().format('YYYY-MM-DD');
+      const today = getUtcDayKey();
       const todayCount = data.find((d) => d.day === today)?.count ?? 0;
       return {
         dailySessions: {
@@ -77,16 +79,56 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
 
   updateSessionGaps: (data) =>
     set(() => {
-      const today = dayjs().format('YYYY-MM-DD');
-      const todayGaps = data.filter((d) => d.startedAt === today);
-      const total = todayGaps.reduce((sum, g) => sum + g.seconds, 0);
-      const avgSeconds = todayGaps.length ? total / todayGaps.length : 0;
+      const today = getUtcDayKey();
+      const todaySummary = data.find((d) => d.day === today);
+      const avgSeconds = todaySummary?.avgSeconds ?? 0;
+
       return {
         sessionGaps: {
           selectedRange: Constants.DEFAULT_STATS_RANGE,
           data,
           todayGapSeconds: avgSeconds,
           lastFetched: Date.now(),
+        },
+      };
+    }),
+
+  updateTodayDailySession: (updated) =>
+    set((state) => {
+      const data = [
+        ...state.dailySessions.data.filter((d) => d.day !== updated.day),
+        updated,
+      ];
+      const todayCount =
+        updated.day === getUtcDayKey()
+          ? updated.count
+          : state.dailySessions.todayCount;
+
+      return {
+        dailySessions: {
+          ...state.dailySessions,
+          data,
+          todayCount,
+        },
+      };
+    }),
+
+  updateTodaySessionGapSummary: (updated) =>
+    set((state) => {
+      const data = [
+        ...state.sessionGaps.data.filter((d) => d.day !== updated.day),
+        updated,
+      ];
+      const avgSeconds =
+        updated.day === getUtcDayKey()
+          ? (updated.avgSeconds ?? 0)
+          : state.sessionGaps.todayGapSeconds;
+
+      return {
+        sessionGaps: {
+          ...state.sessionGaps,
+          data,
+          todayGapSeconds: avgSeconds,
         },
       };
     }),

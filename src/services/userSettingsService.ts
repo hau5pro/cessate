@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { User } from 'firebase/auth';
 import { UserSettings } from '@features/userSettings/userSettings';
-import { db } from '@lib/firebase/firebase';
+import { db } from '@lib/firebase';
 import { useAuthStore } from '@store/useAuthStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 

@@ -14,7 +14,8 @@ import { incrementDailySession, logSessionGap } from './statsService';
 import { ColorUtils } from '@utils/colorUtils';
 import { DB } from '@utils/constants';
 import { Session } from '@features/sessions/session';
-import { db } from '@lib/firebase/firebase';
+import { SessionGapSummary } from '@features/stats/stats';
+import { db } from '@lib/firebase';
 
 export const startNewSession = (
   userId: string,
@@ -47,8 +48,9 @@ export const logRelapseAndStartSession = (
   userId: string,
   previousSession: Session,
   targetDuration: number,
-  batch: WriteBatch
-): Session => {
+  batch: WriteBatch,
+  existingGapSummary?: SessionGapSummary
+): { session: Session; gapSummary: SessionGapSummary } => {
   const sessionCollection = collection(
     db,
     DB.USER_SESSIONS,
@@ -74,11 +76,17 @@ export const logRelapseAndStartSession = (
 
   const gapSeconds = now.seconds - previousSession.createdAt.seconds;
 
-  logSessionGap(batch, userId, previousSession.createdAt, gapSeconds);
+  const gapSummary = logSessionGap(
+    batch,
+    userId,
+    previousSession.createdAt,
+    gapSeconds,
+    existingGapSummary
+  );
 
   incrementDailySession(batch, userId);
 
-  return newSession;
+  return { session: newSession, gapSummary };
 };
 
 export const getCurrentSession = async (userId: string) => {

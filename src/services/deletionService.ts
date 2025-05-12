@@ -10,7 +10,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 
-import { getCollectionRef } from '@lib/firebase/firebase';
+import { getCollectionRef } from '@lib/firebase';
 
 export interface DeletionProgress {
   collectionPath: string;

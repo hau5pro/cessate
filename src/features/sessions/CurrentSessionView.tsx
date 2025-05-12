@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { ColorUtils } from '@utils/colorUtils';
 import Progress from '@components/Progress';
 import { Timestamp } from 'firebase/firestore';
-import dayjs from 'dayjs';
+import { dayjs } from '@lib/dayjs';
 import duration from 'dayjs/plugin/duration';
 import theme from '@themes/theme';
 import { useSessionStore } from '@store/useSessionStore';
