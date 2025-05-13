@@ -128,9 +128,7 @@ export async function getSessionGaps(
   uid: string,
   rangeInDays: number
 ): Promise<SessionGapSummary[]> {
-  const sinceDate = getUtcStartOfDay(
-    dayjs().subtract(rangeInDays, 'day')
-  ).toDate();
+  const sinceDate = getUtcDayKey(dayjs().subtract(rangeInDays, 'day'));
 
   const q = query(
     collection(db, `${DB.USER_STATS}/${uid}/${DB.SESSION_GAPS}`),
