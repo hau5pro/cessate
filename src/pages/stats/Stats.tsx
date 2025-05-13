@@ -9,7 +9,6 @@ import globalStyles from '@themes/GlobalStyles.module.css';
 import { motion } from 'framer-motion';
 import styles from './Stats.module.css';
 import theme from '@themes/theme';
-import { useLoadStats } from '@features/stats/useLoadStats';
 import { useStatsStore } from '@store/useStatsStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
@@ -48,8 +47,6 @@ function StatsPage() {
   const todaysGapSeconds = useStatsStore((s) => s.sessionGaps.todayGapSeconds);
   const { value: formattedGapValue, unit: formattedGapUnit } =
     formatDuration(todaysGapSeconds);
-
-  useLoadStats();
 
   return (
     <Box className={styles.StatsContainer}>

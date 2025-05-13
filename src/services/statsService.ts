@@ -252,11 +252,10 @@ export async function getStatsMeta(uid: string): Promise<StatsMeta | null> {
 
 export function updateStatsMeta(batch: WriteBatch, userId: string) {
   const metaRef = doc(db, `${DB.USER_STATS}/${userId}/${DB.META}/${DB.STATS}`);
-  batch.set(
-    metaRef,
-    {
-      lastUpdated: Timestamp.now(),
-    },
-    { merge: true }
-  );
+  const statsMeta: StatsMeta = {
+    lastUpdated: Timestamp.now(),
+  };
+  batch.set(metaRef, statsMeta, { merge: true });
+
+  return statsMeta;
 }
