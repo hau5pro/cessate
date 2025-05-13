@@ -2,7 +2,6 @@ import {
   AccountCircleIcon,
   LogoutIcon,
   SaveIcon,
-  SettingsIcon,
   TimerIcon,
 } from '@components/CustomIcons';
 import { Box, Typography } from '@mui/material';
@@ -128,13 +127,8 @@ function SettingsPage() {
 
   return (
     <Box className={styles.SettingsContainer}>
-      <MotionSection className={globalStyles.Header} index={0}>
-        <SettingsIcon className={globalStyles.MaterialIcon} fontSize="large" />
-        <Typography variant="h2">Settings</Typography>
-      </MotionSection>
-
       <Box className={styles.SettingsContent}>
-        <MotionSection index={1} className={styles.SettingsSection}>
+        <MotionSection index={0} className={styles.SettingsSection}>
           <Box className={styles.SectionHeader}>
             <TimerIcon
               className={globalStyles.MaterialIcon}
@@ -164,7 +158,7 @@ function SettingsPage() {
           </Box>
         </MotionSection>
 
-        <MotionSection index={2} className={styles.SettingsSection}>
+        <MotionSection index={1} className={styles.SettingsSection}>
           <Box className={styles.SectionHeader}>
             <AccountCircleIcon
               className={globalStyles.MaterialIcon}
@@ -186,7 +180,7 @@ function SettingsPage() {
           </Box>
         </MotionSection>
 
-        <MotionSection index={3}>
+        <MotionSection index={2}>
           <Box className={styles.SettingsSection}>
             <DeleteDataButton userId={user?.uid} />
             <BaseButton

@@ -7,6 +7,7 @@ import {
   YAxis,
 } from 'recharts';
 import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 import BaseToggleButton from '@components/BaseToggleButton';
 import BaseToggleButtonGroup from '@components/BaseToggleButtonGroup';
@@ -16,6 +17,7 @@ import { useStatsStore } from '@store/useStatsStore';
 
 export default function DailySessionChart() {
   const { dailySessions, setDailySessionsRange } = useStatsStore();
+  const [showChart, setShowChart] = useState(false);
 
   const selectedRange = dailySessions.selectedRange;
   const fullData = dailySessions.data;
@@ -29,6 +31,13 @@ export default function DailySessionChart() {
   };
 
   const defaultRanges = [7, 30];
+  const animationDelay = 300;
+
+  useEffect(() => {
+    setShowChart(false);
+    const timer = setTimeout(() => setShowChart(true), animationDelay);
+    return () => clearTimeout(timer);
+  }, [selectedRange]);
 
   return (
     <Box>
@@ -49,38 +58,47 @@ export default function DailySessionChart() {
       </Box>
 
       <Box height={300} minHeight={300} sx={{ pointerEvents: 'none' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={filteredData}
-            margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
-          >
-            <XAxis
-              dataKey="day"
-              stroke={theme.palette.secondary.main}
-              tickFormatter={(value) =>
-                dayjs.utc(value).local().format('MMM DD')
-              }
-              tick={{ fontSize: 10 }}
-            />
-            <YAxis
-              stroke={theme.palette.secondary.main}
-              tick={{ fontSize: 10 }}
-              allowDecimals={false}
-              label={{
-                value: 'Sessions',
-                angle: -90,
-                position: 'insideLeft',
-                offset: 8,
-                style: {
-                  fill: theme.palette.secondary.main,
-                  fontSize: 12,
-                },
-              }}
-            />
-            <Tooltip cursor={false} content={() => null} />
-            <Bar dataKey="count" fill={theme.palette.primary.main} />
-          </BarChart>
-        </ResponsiveContainer>
+        {showChart && (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              key={selectedRange}
+              data={filteredData}
+              margin={{ top: 10, right: 16, left: 0, bottom: 0 }}
+            >
+              <XAxis
+                dataKey="day"
+                stroke={theme.palette.secondary.main}
+                tickFormatter={(value) =>
+                  dayjs.utc(value).local().format('MMM DD')
+                }
+                tick={{ fontSize: 10 }}
+              />
+              <YAxis
+                stroke={theme.palette.secondary.main}
+                tick={{ fontSize: 10 }}
+                allowDecimals={false}
+                label={{
+                  value: 'Sessions',
+                  angle: -90,
+                  position: 'insideLeft',
+                  offset: 8,
+                  style: {
+                    fill: theme.palette.secondary.main,
+                    fontSize: 12,
+                  },
+                }}
+              />
+              <Tooltip cursor={false} content={() => null} />
+              <Bar
+                dataKey="count"
+                fill={theme.palette.primary.main}
+                isAnimationActive
+                animationBegin={0}
+                animationDuration={800}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </Box>
     </Box>
   );

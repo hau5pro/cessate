@@ -2,10 +2,8 @@ import { Box, Typography } from '@mui/material';
 import { useEffect, useRef } from 'react';
 
 import { CacheUtils } from '@utils/cacheUtils';
-import { HistoryIcon } from '@components/CustomIcons';
 import Loading from '@components/Loading';
 import SessionCard from '@features/history/SessionCard';
-import globalStyles from '@themes/GlobalStyles.module.css';
 import { motion } from 'framer-motion';
 import styles from './History.module.css';
 import theme from '@themes/theme';
@@ -74,11 +72,6 @@ function HistoryPage() {
 
   return (
     <Box className={styles.HistoryContainer}>
-      <Typography className={globalStyles.Header} variant="h2">
-        <HistoryIcon className={globalStyles.MaterialIcon} fontSize="large" />
-        History
-      </Typography>
-
       <Box className={styles.HistoryContent}>
         {isEmpty && <NoContent />}
         {!isEmpty &&

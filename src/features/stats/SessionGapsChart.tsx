@@ -7,6 +7,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { useEffect, useState } from 'react';
 
 import BaseToggleButton from '@components/BaseToggleButton';
 import BaseToggleButtonGroup from '@components/BaseToggleButtonGroup';
@@ -17,6 +18,7 @@ import { useStatsStore } from '@store/useStatsStore';
 
 export default function SessionGapsChart() {
   const { sessionGaps, setSessionGapsRange } = useStatsStore();
+  const [showChart, setShowChart] = useState(false);
 
   const selectedRange = sessionGaps.selectedRange;
   const fullData = sessionGaps.data;
@@ -33,6 +35,13 @@ export default function SessionGapsChart() {
   };
 
   const defaultRanges = [7, 30];
+  const animationDelay = 400;
+
+  useEffect(() => {
+    setShowChart(false);
+    const timer = setTimeout(() => setShowChart(true), animationDelay);
+    return () => clearTimeout(timer);
+  }, [selectedRange]);
 
   return (
     <Box mt={4}>
@@ -58,50 +67,55 @@ export default function SessionGapsChart() {
       </Box>
 
       <Box height={300} minHeight={300} sx={{ pointerEvents: 'none' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={displayData}
-            margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
-          >
-            <XAxis
-              dataKey="day"
-              stroke={theme.palette.secondary.main}
-              tickFormatter={(value) =>
-                dayjs.utc(value).local().format('MMM DD')
-              }
-              tick={{ fontSize: 10 }}
-            />
-            <YAxis
-              domain={yDomain}
-              stroke={theme.palette.secondary.main}
-              tick={{ fontSize: 10 }}
-              allowDecimals
-              tickFormatter={(v) =>
-                unit === 'minutes' ? `${v}` : v.toFixed(1)
-              }
-              label={{
-                value: unit.charAt(0).toUpperCase() + unit.slice(1),
-                angle: -90,
-                position: 'insideLeft',
-                offset: 8,
-                style: {
-                  fill: theme.palette.secondary.main,
-                  fontSize: 12,
-                },
-              }}
-            />
-            <Tooltip cursor={false} content={() => null} />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke={theme.palette.primary.main}
-              strokeWidth={2}
-              dot={{ r: 3, fill: theme.palette.primary.main }}
-              activeDot={{ r: 5, fill: theme.palette.primary.main }}
-              isAnimationActive={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {showChart && (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              key={selectedRange}
+              data={displayData}
+              margin={{ top: 10, right: 16, left: 0, bottom: 0 }}
+            >
+              <XAxis
+                dataKey="day"
+                stroke={theme.palette.secondary.main}
+                tickFormatter={(value) =>
+                  dayjs.utc(value).local().format('MMM DD')
+                }
+                tick={{ fontSize: 10 }}
+              />
+              <YAxis
+                domain={yDomain}
+                stroke={theme.palette.secondary.main}
+                tick={{ fontSize: 10 }}
+                allowDecimals
+                tickFormatter={(v) =>
+                  unit === 'minutes' ? `${v}` : v.toFixed(1)
+                }
+                label={{
+                  value: unit.charAt(0).toUpperCase() + unit.slice(1),
+                  angle: -90,
+                  position: 'insideLeft',
+                  offset: 8,
+                  style: {
+                    fill: theme.palette.secondary.main,
+                    fontSize: 12,
+                  },
+                }}
+              />
+              <Tooltip cursor={false} content={() => null} />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke={theme.palette.primary.main}
+                strokeWidth={2}
+                dot={{ r: 3, fill: theme.palette.primary.main }}
+                activeDot={{ r: 5, fill: theme.palette.primary.main }}
+                isAnimationActive
+                animationBegin={0}
+                animationDuration={800}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </Box>
     </Box>
   );

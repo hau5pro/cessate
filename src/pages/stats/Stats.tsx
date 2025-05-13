@@ -1,16 +1,12 @@
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 import AnimatedCounter from '@components/AnimatedCounter';
 import DailySessionChart from '@features/stats/DailySessionsChart';
 import SessionGapsChart from '@features/stats/SessionGapsChart';
-import { TimelineIcon } from '@components/CustomIcons';
 import { formatDuration } from '@services/statsService';
-import globalStyles from '@themes/GlobalStyles.module.css';
 import { motion } from 'framer-motion';
 import styles from './Stats.module.css';
-import theme from '@themes/theme';
 import { useStatsStore } from '@store/useStatsStore';
-import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 const sectionVariants = {
   hidden: { opacity: 0, x: -20 },
@@ -42,7 +38,6 @@ const MotionSection = ({
 );
 
 function StatsPage() {
-  const name = useUserSettingsStore((s) => s.settings?.name);
   const todaysDailySessions = useStatsStore((s) => s.dailySessions.todayCount);
   const todaysGapSeconds = useStatsStore((s) => s.sessionGaps.todayGapSeconds);
   const { value: formattedGapValue, unit: formattedGapUnit } =
@@ -50,56 +45,41 @@ function StatsPage() {
 
   return (
     <Box className={styles.StatsContainer}>
-      <MotionSection index={0}>
-        <Typography className={globalStyles.Header} variant="h2">
-          <TimelineIcon
-            className={globalStyles.MaterialIcon}
-            fontSize="large"
-          />
-          Stats
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              flex: 1,
-              color: theme.palette.secondary.main,
-            }}
-          >
-            {name}
-          </Box>
-        </Typography>
-      </MotionSection>
       <Box className={styles.StatsContent}>
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <MotionSection index={1}>
+          <MotionSection index={0}>
             <AnimatedCounter
               value={todaysDailySessions}
               suffix="sessions"
               label="Sessions Today"
               variant="subtitle1"
+              duration={250}
+              delay={0}
             />
           </MotionSection>
 
-          <MotionSection index={2}>
+          <MotionSection index={1}>
             <AnimatedCounter
               value={formattedGapValue}
               suffix={formattedGapUnit}
               label="Time Between Sessions"
               variant="subtitle1"
+              duration={250}
+              delay={250}
             />
             <Divider />
           </MotionSection>
 
-          <MotionSection index={3}>
+          <MotionSection index={2}>
             <DailySessionChart />
             <Divider />
           </MotionSection>
 
-          <MotionSection index={4}>
+          <MotionSection index={3}>
             <SessionGapsChart />
           </MotionSection>
         </motion.div>

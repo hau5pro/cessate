@@ -7,6 +7,7 @@ type AnimatedCounterProps = {
   value: number;
   label?: string;
   duration?: number;
+  delay?: number;
   format?: (val: number) => string;
   suffix?: string;
   size?: number; // px
@@ -22,6 +23,7 @@ export default function AnimatedCounter({
   value,
   label,
   duration = 1000,
+  delay = 0,
   format = smartFormat,
   suffix,
   ...typographyProps
@@ -31,6 +33,7 @@ export default function AnimatedCounter({
   useEffect(() => {
     let frame = 0;
     const totalFrames = Math.round((duration / 1000) * 60);
+    let animationFrame: number;
 
     const counter = () => {
       frame++;
@@ -38,11 +41,20 @@ export default function AnimatedCounter({
       const currentValue = +(value * progress).toFixed(2);
       setDisplayValue(currentValue);
 
-      if (progress < 1) requestAnimationFrame(counter);
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(counter);
+      }
     };
 
-    counter();
-  }, [value, duration]);
+    const timeoutId = window.setTimeout(() => {
+      animationFrame = requestAnimationFrame(counter);
+    }, delay ?? 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [value, duration, delay]);
 
   return (
     <Box

@@ -44,8 +44,8 @@ export default function BottomNav({ className }: BottomNavProps) {
         sx={{
           bgcolor: 'transparent',
           backdropFilter: 'blur(10px)',
-          height: '4rem',
-          paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + 12px)`,
+          height: '4.5rem',
+          paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + 16px)`,
           '& .MuiBottomNavigationAction-root': {
             color: theme.palette.secondary.dark,
             boxShadow: 'none',
@@ -70,7 +70,6 @@ export default function BottomNav({ className }: BottomNavProps) {
         }}
         value={value}
         onChange={handleChange}
-        showLabels
       >
         <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
         <BottomNavigationAction
