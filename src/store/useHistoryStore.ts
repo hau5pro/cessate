@@ -1,6 +1,8 @@
+import { Constants } from '@utils/constants';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 import { Session } from '@features/sessions/session';
 import { create } from 'zustand';
+import { getPastSessions } from '@services/sessionsService';
 
 export type HistoryState = {
   sessions: Session[];
@@ -19,31 +21,63 @@ export type HistoryActions = {
   setLoading: (loading: boolean) => void;
   setHasInitialized: (hasInitialized: boolean) => void;
   reset: () => void;
+  loadMore: (uid: string) => Promise<void>;
 };
 
-export const useHistoryStore = create<HistoryState & HistoryActions>((set) => ({
-  sessions: [],
-  hasMore: false,
-  lastDoc: null,
-  loading: false,
-  hasInitialized: false,
+export const useHistoryStore = create<HistoryState & HistoryActions>(
+  (set, get) => ({
+    sessions: [],
+    hasMore: false,
+    lastDoc: null,
+    loading: false,
+    hasInitialized: false,
 
-  appendSessions: (newSessions, lastDoc, hasMore) =>
-    set((state) => ({
-      sessions: [...state.sessions, ...newSessions],
-      lastDoc,
-      hasMore,
-    })),
+    appendSessions: (newSessions, lastDoc, hasMore) =>
+      set((state) => ({
+        sessions: [...state.sessions, ...newSessions],
+        lastDoc,
+        hasMore,
+      })),
 
-  setLoading: (loading) => set({ loading }),
-  setHasInitialized: (hasInitialized) => set({ hasInitialized }),
+    setLoading: (loading) => set({ loading }),
+    setHasInitialized: (hasInitialized) => set({ hasInitialized }),
 
-  reset: () =>
-    set({
-      sessions: [],
-      hasMore: false,
-      lastDoc: null,
-      loading: false,
-      hasInitialized: false,
-    }),
-}));
+    loadMore: async (uid) => {
+      const {
+        loading,
+        hasMore,
+        hasInitialized,
+        lastDoc,
+        appendSessions,
+        setLoading,
+        setHasInitialized,
+      } = get();
+
+      if (loading || !uid || (hasInitialized && !hasMore)) return;
+
+      try {
+        setLoading(true);
+        const {
+          sessions,
+          lastVisible,
+          hasMore: more,
+        } = await getPastSessions(uid, Constants.PAGE_SIZE, lastDoc);
+        appendSessions(sessions, lastVisible, more);
+        setHasInitialized(true);
+      } catch (err) {
+        console.error('Error loading sessions:', err);
+      } finally {
+        setLoading(false);
+      }
+    },
+
+    reset: () =>
+      set({
+        sessions: [],
+        hasMore: false,
+        lastDoc: null,
+        loading: false,
+        hasInitialized: false,
+      }),
+  })
+);

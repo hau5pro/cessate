@@ -106,8 +106,9 @@ export const getCurrentSession = async (userId: string) => {
 export const getPastSessions = async (
   userId: string,
   pageSize = Constants.PAGE_SIZE,
-  startAfterDoc?: QueryDocumentSnapshot
+  startAfterDoc: QueryDocumentSnapshot | null = null
 ) => {
+  console.log('getPastSessions', userId, pageSize, startAfterDoc);
   const sessionsRef = collection(db, DB.USER_SESSIONS, userId, DB.SESSIONS);
   let q = query(
     sessionsRef,
