@@ -6,10 +6,40 @@ import { HistoryIcon } from '@components/CustomIcons';
 import Loading from '@components/Loading';
 import SessionCard from '@features/history/SessionCard';
 import globalStyles from '@themes/GlobalStyles.module.css';
+import { motion } from 'framer-motion';
 import styles from './History.module.css';
 import theme from '@themes/theme';
 import { useAuthStore } from '@store/useAuthStore';
 import { useHistoryStore } from '@store/useHistoryStore';
+
+const sectionVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: (i: number) => ({
+    x: 0,
+    opacity: 1,
+    transition: { delay: i * 0.05, duration: 0.3, ease: 'easeOut' },
+  }),
+};
+
+const MotionSection = ({
+  children,
+  index,
+  className,
+}: {
+  children: React.ReactNode;
+  index: number;
+  className?: string;
+}) => (
+  <motion.div
+    className={className}
+    variants={sectionVariants}
+    initial="hidden"
+    animate="visible"
+    custom={index}
+  >
+    {children}
+  </motion.div>
+);
 
 function HistoryPage() {
   const { sessions, hasInitialized, hasMore, loading, loadMore } =
@@ -51,8 +81,10 @@ function HistoryPage() {
       <Box className={styles.HistoryContent}>
         {isEmpty && <NoContent />}
         {!isEmpty &&
-          sessions.map((session) => (
-            <SessionCard key={session.id} session={session} />
+          sessions.map((session, index) => (
+            <MotionSection index={index}>
+              <SessionCard key={session.id} session={session} />
+            </MotionSection>
           ))}
         {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
         {loading && !isEmpty && <Loading />}
