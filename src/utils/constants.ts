@@ -30,4 +30,5 @@ export class Constants {
   static DEFAULT_STATS_RANGE = 7; // 7 days
   static FETCH_DAYS = 30; // 30 days
   static MAX_BATCH_SIZE = 500; // firestore max batch size
+  static PAGE_SIZE = 10; // pagination page size
 }

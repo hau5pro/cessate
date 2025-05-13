@@ -1,4 +1,6 @@
+import { Constants, DB } from '@utils/constants';
 import {
+  QueryDocumentSnapshot,
   Timestamp,
   WriteBatch,
   collection,
@@ -7,12 +9,12 @@ import {
   limit,
   orderBy,
   query,
+  startAfter,
   where,
 } from 'firebase/firestore';
 import { incrementDailySession, logSessionGap } from './statsService';
 
 import { ColorUtils } from '@utils/colorUtils';
-import { DB } from '@utils/constants';
 import { Session } from '@features/sessions/session';
 import { SessionGapSummary } from '@features/stats/stats';
 import { db } from '@lib/firebase';
@@ -99,4 +101,32 @@ export const getCurrentSession = async (userId: string) => {
 
   const snapshot = await getDocs(q);
   return snapshot.empty ? null : (snapshot.docs[0].data() as Session);
+};
+
+export const getPastSessions = async (
+  userId: string,
+  pageSize = Constants.PAGE_SIZE,
+  startAfterDoc?: QueryDocumentSnapshot
+) => {
+  const sessionsRef = collection(db, DB.USER_SESSIONS, userId, DB.SESSIONS);
+  let q = query(
+    sessionsRef,
+    where('endedAt', '!=', null),
+    orderBy('createdAt', 'desc'),
+    limit(pageSize + 1)
+  );
+  if (startAfterDoc) q = query(q, startAfter(startAfterDoc));
+  const snap = await getDocs(q);
+  const docs = snap.docs;
+  const hasMore = docs.length > pageSize;
+  const sessions = docs.slice(0, pageSize).map((d) => ({
+    id: d.id,
+    ...d.data(),
+  })) as Session[];
+
+  return {
+    sessions,
+    lastVisible: snap.docs[snap.docs.length - 1],
+    hasMore,
+  };
 };

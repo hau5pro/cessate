@@ -2,6 +2,7 @@ import {
   createUserSettings,
   getUserSettings,
 } from '@services/userSettingsService';
+import { getCurrentSession, getPastSessions } from '@services/sessionsService';
 import {
   getDailySessions,
   getSessionGaps,
@@ -10,10 +11,10 @@ import {
 } from '@services/statsService';
 
 import { Constants } from '@utils/constants';
-import { getCurrentSession } from '@services/sessionsService';
 import { runSessionTransaction } from '@lib/firebase';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
+import { useHistoryStore } from '@store/useHistoryStore';
 import { useSessionStore } from '@store/useSessionStore';
 import { useStatsStore } from '@store/useStatsStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
@@ -41,6 +42,13 @@ export const useInitApp = () => {
     setLoading: setStatsLoading,
     setHasInitialized: setStatsInitialized,
   } = useStatsStore();
+
+  const {
+    hasInitialized: hasInitializedHistory,
+    appendSessions,
+    setLoading: setHistoryLoading,
+    setHasInitialized: setHistoryInitialized,
+  } = useHistoryStore();
 
   const loadSession = async (uid: string) => {
     if (hasInitializedSession) return;
@@ -98,9 +106,27 @@ export const useInitApp = () => {
     }
   };
 
+  const loadInitialHistory = async (uid: string) => {
+    if (hasInitializedHistory) return;
+
+    setHistoryLoading(true);
+    try {
+      const { sessions, lastVisible, hasMore } = await getPastSessions(
+        uid,
+        Constants.PAGE_SIZE
+      );
+      appendSessions(sessions, lastVisible, hasMore);
+    } catch (err) {
+      console.error('Error loading history:', err);
+    } finally {
+      setHistoryLoading(false);
+      setHistoryInitialized(true);
+    }
+  };
+
   const loadCoreAppData = async (uid: string) => {
     await Promise.all([loadSession(uid), loadSettings(uid)]);
-    await loadStats(uid);
+    await Promise.all([loadStats(uid), loadInitialHistory(uid)]);
   };
 
   useEffect(() => {
