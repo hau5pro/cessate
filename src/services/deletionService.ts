@@ -28,7 +28,7 @@ export async function deleteCollectionInChunks(
   pathSegments: [string, ...string[]],
   reportProgress?: ProgressCallback
 ): Promise<number> {
-  const pathString = pathSegments.join('/');
+  const pathString = pathSegments.filter((_, i) => i % 2 === 0).join('/');
 
   if (pathSegments.length % 2 === 0) {
     // Document path
