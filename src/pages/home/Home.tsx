@@ -25,18 +25,35 @@ function HomePage() {
   }, [hasInitialized]);
 
   useEffect(() => {
-    if (hasRendered) {
+    let mounted = true;
+
+    if (!hasRendered) return;
+
+    const startAnimations = () => {
+      if (!mounted) return;
       topControls.start({ y: 0, opacity: 1 });
 
       setTimeout(() => {
+        if (!mounted) return;
         bottomControls.start({ y: 0, opacity: 1 });
       }, 200);
 
       setTimeout(() => {
+        if (!mounted) return;
         quoteControls.start({ opacity: 1 });
       }, 1000);
-    }
-  }, [hasRendered, topControls, bottomControls, quoteControls]);
+    };
+
+    // wait a tick to ensure DOM is committed
+    const timeoutId = setTimeout(() => {
+      requestAnimationFrame(startAnimations);
+    }, 0);
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [hasRendered]);
 
   if (!hasInitialized) return null;
 
