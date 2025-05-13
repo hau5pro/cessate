@@ -76,8 +76,8 @@ function HistoryPage() {
         {isEmpty && <NoContent />}
         {!isEmpty &&
           sessions.map((session, index) => (
-            <MotionSection index={index}>
-              <SessionCard key={session.id} session={session} />
+            <MotionSection key={session.id} index={index}>
+              <SessionCard session={session} />
             </MotionSection>
           ))}
         {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}

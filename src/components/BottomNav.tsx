@@ -70,6 +70,7 @@ export default function BottomNav({ className }: BottomNavProps) {
         }}
         value={value}
         onChange={handleChange}
+        showLabels
       >
         <BottomNavigationAction label="Home" value="/" icon={<HomeIcon />} />
         <BottomNavigationAction

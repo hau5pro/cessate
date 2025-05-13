@@ -66,7 +66,13 @@ export default function SessionGapsChart() {
         </BaseToggleButtonGroup>
       </Box>
 
-      <Box height={300} minHeight={300} sx={{ pointerEvents: 'none' }}>
+      <Box
+        sx={{
+          height: { xs: 200, sm: 300 },
+          minHeight: { xs: 200, sm: 300 },
+          pointerEvents: 'none',
+        }}
+      >
         {showChart && (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
