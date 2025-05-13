@@ -92,7 +92,6 @@ export async function deleteAllUserData(
   const paths: [string, ...string[]][] = [
     [DB.USER_STATS, userId, DB.DAILY_SESSIONS],
     [DB.USER_STATS, userId, DB.SESSION_GAPS],
-    [DB.USER_STATS, userId, DB.META, DB.STATS],
     [DB.USER_SESSIONS, userId, DB.SESSIONS],
     [DB.USER_SETTINGS, userId],
   ];

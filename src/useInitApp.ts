@@ -3,15 +3,9 @@ import {
   getUserSettings,
 } from '@services/userSettingsService';
 import { getCurrentSession, getPastSessions } from '@services/sessionsService';
-import {
-  getDailySessions,
-  getSessionGaps,
-  getStatsMeta,
-  updateStatsMeta,
-} from '@services/statsService';
+import { getDailySessions, getSessionGaps } from '@services/statsService';
 
 import { Constants } from '@utils/constants';
-import { runSessionTransaction } from '@lib/firebase';
 import { useAuthStore } from '@store/useAuthStore';
 import { useEffect } from 'react';
 import { useHistoryStore } from '@store/useHistoryStore';
@@ -84,13 +78,6 @@ export const useInitApp = () => {
 
     setStatsLoading(true);
     try {
-      let meta = await getStatsMeta(uid);
-      if (!meta) {
-        await runSessionTransaction(async (batch) => {
-          meta = updateStatsMeta(batch, uid);
-        });
-      }
-
       const [daily, gaps] = await Promise.all([
         getDailySessions(uid, Constants.FETCH_DAYS),
         getSessionGaps(uid, Constants.FETCH_DAYS),

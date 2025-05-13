@@ -1,15 +1,10 @@
-import {
-  DailySession,
-  SessionGapSummary,
-  StatsMeta,
-} from '@features/stats/stats';
+import { DailySession, SessionGapSummary } from '@features/stats/stats';
 import {
   Timestamp,
   WriteBatch,
   arrayUnion,
   collection,
   doc,
-  getDoc,
   getDocs,
   increment,
   orderBy,
@@ -37,8 +32,6 @@ export function incrementDailySession(batch: WriteBatch, userId: string): void {
     },
     { merge: true }
   );
-
-  updateStatsMeta(batch, userId);
 }
 
 export async function getDailySessions(
@@ -113,8 +106,6 @@ export function logSessionGap(
     },
     { merge: true }
   );
-
-  updateStatsMeta(batch, userId);
 
   return {
     day: dayKey,
@@ -248,26 +239,4 @@ export function formatDuration(seconds: number): {
   if (seconds < 86400)
     return { value: +(seconds / 3600).toFixed(2), unit: 'hours' };
   return { value: +(seconds / 86400).toFixed(2), unit: 'days' };
-}
-
-export async function getStatsMeta(uid: string): Promise<StatsMeta | null> {
-  const metaRef = doc(db, `${DB.USER_STATS}/${uid}/${DB.META}/${DB.STATS}`);
-  const snap = await getDoc(metaRef);
-
-  if (!snap.exists()) return null;
-
-  const data = snap.data();
-  return {
-    lastUpdated: data?.lastUpdated ?? null,
-  };
-}
-
-export function updateStatsMeta(batch: WriteBatch, userId: string) {
-  const metaRef = doc(db, `${DB.USER_STATS}/${userId}/${DB.META}/${DB.STATS}`);
-  const statsMeta: StatsMeta = {
-    lastUpdated: Timestamp.now(),
-  };
-  batch.set(metaRef, statsMeta, { merge: true });
-
-  return statsMeta;
 }
