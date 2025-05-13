@@ -52,7 +52,7 @@ export const logRelapseAndStartSession = (
   targetDuration: number,
   batch: WriteBatch,
   existingGapSummary?: SessionGapSummary
-): { session: Session; gapSummary: SessionGapSummary } => {
+): { session: Session; previous: Session; gapSummary: SessionGapSummary } => {
   const sessionCollection = collection(
     db,
     DB.USER_SESSIONS,
@@ -66,6 +66,14 @@ export const logRelapseAndStartSession = (
   const normalizedPercent = duration / previousSession.targetDuration;
   const color = ColorUtils.interpolateColor(normalizedPercent);
   const percentage = Math.min(100, Math.round(normalizedPercent * 100));
+
+  const endedSession: Session = {
+    ...previousSession,
+    endedAt: now,
+    duration,
+    percentage,
+    color,
+  };
 
   batch.update(previousRef, {
     endedAt: now,
@@ -88,7 +96,7 @@ export const logRelapseAndStartSession = (
 
   incrementDailySession(batch, userId);
 
-  return { session: newSession, gapSummary };
+  return { session: newSession, previous: endedSession, gapSummary };
 };
 
 export const getCurrentSession = async (userId: string) => {
@@ -108,7 +116,6 @@ export const getPastSessions = async (
   pageSize = Constants.PAGE_SIZE,
   startAfterDoc: QueryDocumentSnapshot | null = null
 ) => {
-  console.log('getPastSessions', userId, pageSize, startAfterDoc);
   const sessionsRef = collection(db, DB.USER_SESSIONS, userId, DB.SESSIONS);
   let q = query(
     sessionsRef,

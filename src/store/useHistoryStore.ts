@@ -18,6 +18,8 @@ export type HistoryActions = {
     lastDoc: QueryDocumentSnapshot | null,
     hasMore: boolean
   ) => void;
+  updateSession: (updated: Session) => void;
+  addSession: (session: Session) => void;
   setLoading: (loading: boolean) => void;
   setHasInitialized: (hasInitialized: boolean) => void;
   reset: () => void;
@@ -37,6 +39,18 @@ export const useHistoryStore = create<HistoryState & HistoryActions>(
         sessions: [...state.sessions, ...newSessions],
         lastDoc,
         hasMore,
+      })),
+
+    updateSession: (updated: Session) =>
+      set((state) => ({
+        sessions: state.sessions.map((s) =>
+          s.id === updated.id ? { ...s, ...updated } : s
+        ),
+      })),
+
+    addSession: (newSession: Session) =>
+      set((state) => ({
+        sessions: [newSession, ...state.sessions],
       })),
 
     setLoading: (loading) => set({ loading }),

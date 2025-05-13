@@ -6,6 +6,7 @@ import { getLocalDayKey } from '@lib/dayjs';
 import { logRelapseAndStartSession } from '@services/sessionsService';
 import { runSessionTransaction } from '@lib/firebase';
 import { useAuthStore } from '@store/useAuthStore';
+import { useHistoryStore } from '@store/useHistoryStore';
 import { useSessionStore } from '@store/useSessionStore';
 import { useStatsStore } from '@store/useStatsStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
@@ -36,23 +37,28 @@ function RelapseButton() {
     (state) => state.updateTodayDailySession
   );
 
+  const updateHistorySession = useHistoryStore((state) => state.updateSession);
+  const addToHistory = useHistoryStore((state) => state.addSession);
+
   const handleRelapse = async () => {
     if (!user || !session?.id || !targetDuration) return;
 
     try {
       setLoading(true);
 
-      const { session: newSession, gapSummary } = await runSessionTransaction(
-        async (batch) => {
-          return logRelapseAndStartSession(
-            user.uid,
-            session,
-            targetDuration,
-            batch,
-            todaysGapSummary
-          );
-        }
-      );
+      const {
+        session: newSession,
+        previous,
+        gapSummary,
+      } = await runSessionTransaction(async (batch) => {
+        return logRelapseAndStartSession(
+          user.uid,
+          session,
+          targetDuration,
+          batch,
+          todaysGapSummary
+        );
+      });
 
       updateTodaySessionGapSummary(gapSummary);
       const updatedCount = (todaysDailySessions?.count ?? 0) + 1;
@@ -61,6 +67,9 @@ function RelapseButton() {
         count: updatedCount,
         updatedAt: Timestamp.now(),
       });
+
+      updateHistorySession(previous);
+      addToHistory(newSession);
 
       setCurrentSession(newSession);
     } catch (err) {

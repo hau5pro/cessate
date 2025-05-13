@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 
 import { CacheUtils } from '@utils/cacheUtils';
 import { HistoryIcon } from '@components/CustomIcons';
+import Loading from '@components/Loading';
 import SessionCard from '@features/history/SessionCard';
 import globalStyles from '@themes/GlobalStyles.module.css';
 import styles from './History.module.css';
@@ -54,15 +55,7 @@ function HistoryPage() {
             <SessionCard key={session.id} session={session} />
           ))}
         {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
-        {loading && !isEmpty && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ textAlign: 'center', mt: 2 }}
-          >
-            Loading more...
-          </Typography>
-        )}
+        {loading && !isEmpty && <Loading />}
       </Box>
     </Box>
   );
