@@ -111,7 +111,7 @@ export const getPastSessions = async (
   const sessionsRef = collection(db, DB.USER_SESSIONS, userId, DB.SESSIONS);
   let q = query(
     sessionsRef,
-    where('endedAt', '!=', null),
+    // where('endedAt', '!=', null),
     orderBy('createdAt', 'desc'),
     limit(pageSize + 1)
   );
