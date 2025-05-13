@@ -12,7 +12,6 @@ const BaseCard = ({ children, sx, ...props }: CardProps) => {
         backdropFilter: 'blur(25px) saturate(180%)',
         WebkitBackdropFilter: 'blur(25px) saturate(180%)',
         color: 'white',
-        padding: { xs: 1, sm: 2 },
         ...sx,
       }}
     >

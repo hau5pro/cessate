@@ -8,8 +8,6 @@ import styles from './Layout.module.css';
 import theme from '@themes/theme';
 import { useAuthStore } from '@store/useAuthStore';
 
-const MotionHeader = motion(Box);
-
 function Layout() {
   const loading = useAuthStore((state) => state.loading);
   const user = useAuthStore((state) => state.user);
@@ -28,15 +26,23 @@ function Layout() {
           margin: { sm: '0.75rem' },
         }}
       >
-        <MotionHeader
+        <motion.div
+          className={styles.Header}
           initial={false}
           animate={isLoggedIn ? 'compact' : 'large'}
           variants={{
-            large: { padding: '1rem', height: 'auto' },
-            compact: { padding: '0.25rem', height: '3rem' },
+            large: { paddingTop: '1rem', paddingBottom: '1rem', scaleY: 1 },
+            compact: {
+              paddingTop: '0.25rem',
+              paddingBottom: '0.25rem',
+              scaleY: 0.9,
+            },
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          style={{ textAlign: 'center' }}
+          style={{
+            textAlign: 'center',
+            originY: 0,
+          }}
         >
           <Typography
             variant="h1"
@@ -47,7 +53,7 @@ function Layout() {
           >
             Cessate
           </Typography>
-        </MotionHeader>
+        </motion.div>
 
         <main style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
           <Outlet />
