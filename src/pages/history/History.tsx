@@ -13,10 +13,11 @@ import { useAuthStore } from '@store/useAuthStore';
 import { useHistoryStore } from '@store/useHistoryStore';
 
 const sectionVariants = {
-  hidden: { opacity: 0, x: -20 },
+  hidden: { opacity: 0, y: -20, scale: 0.95 },
   visible: (i: number) => ({
-    x: 0,
+    y: 0,
     opacity: 1,
+    scale: 1,
     transition: { delay: i * 0.05, duration: 0.3, ease: 'easeOut' },
   }),
 };
