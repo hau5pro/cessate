@@ -12,4 +12,7 @@ export const getLocalDayKey = (d: dayjs.ConfigType = new Date()) =>
 export const getUtcStartOfDay = (d: dayjs.ConfigType = new Date()) =>
   dayjs(d).utc().startOf('day');
 
+export const getLocalStartOfDay = (d: dayjs.ConfigType = new Date()) =>
+  dayjs(d).startOf('day');
+
 export { dayjs };

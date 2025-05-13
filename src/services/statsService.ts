@@ -16,7 +16,7 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { dayjs, getUtcDayKey, getUtcStartOfDay } from '@lib/dayjs';
+import { dayjs, getLocalDayKey, getLocalStartOfDay } from '@lib/dayjs';
 
 import { DB } from '@utils/constants';
 import { SessionGap } from '@features/stats/stats';
@@ -25,7 +25,7 @@ import { db } from '@lib/firebase';
 export type TimeUnit = 'seconds' | 'minutes' | 'hours' | 'days';
 
 export function incrementDailySession(batch: WriteBatch, userId: string): void {
-  const todayKey = getUtcDayKey();
+  const todayKey = getLocalDayKey();
   const docRef = doc(db, DB.USER_STATS, userId, DB.DAILY_SESSIONS, todayKey);
 
   batch.set(
@@ -45,7 +45,7 @@ export async function getDailySessions(
   uid: string,
   rangeInDays: number
 ): Promise<DailySession[]> {
-  const sinceDate = getUtcDayKey(dayjs().subtract(rangeInDays, 'day'));
+  const sinceDate = getLocalDayKey(dayjs().subtract(rangeInDays, 'day'));
 
   const q = query(
     collection(db, `${DB.USER_STATS}/${uid}/${DB.DAILY_SESSIONS}`),
@@ -64,7 +64,7 @@ function fillMissingDays(
   sessions: DailySession[],
   range: number
 ): DailySession[] {
-  const today = getUtcStartOfDay();
+  const today = getLocalStartOfDay();
   const map = new Map(sessions.map((s) => [s.day, s]));
 
   const filled: DailySession[] = [];
@@ -91,7 +91,7 @@ export function logSessionGap(
   seconds: number,
   existingSummary?: SessionGapSummary
 ): SessionGapSummary {
-  const dayKey = dayjs(startedAt.toDate()).utc().format('YYYY-MM-DD');
+  const dayKey = dayjs(startedAt.toDate()).format('YYYY-MM-DD');
   const docRef = doc(db, DB.USER_STATS, userId, DB.SESSION_GAPS, dayKey);
 
   const gap: SessionGap = {
@@ -128,7 +128,7 @@ export async function getSessionGaps(
   uid: string,
   rangeInDays: number
 ): Promise<SessionGapSummary[]> {
-  const sinceDate = getUtcDayKey(dayjs().subtract(rangeInDays, 'day'));
+  const sinceDate = getLocalDayKey(dayjs().subtract(rangeInDays, 'day'));
 
   const q = query(
     collection(db, `${DB.USER_STATS}/${uid}/${DB.SESSION_GAPS}`),
@@ -155,7 +155,7 @@ function fillMissingGaps(
   gaps: SessionGapSummary[],
   range: number
 ): SessionGapSummary[] {
-  const today = getUtcStartOfDay();
+  const today = getLocalStartOfDay();
   const map = new Map(gaps.map((g) => [g.day, g]));
 
   const filled: SessionGapSummary[] = [];
@@ -218,7 +218,7 @@ export function transformSessionGaps(summaries: SessionGapSummary[]): {
   }));
 
   return {
-    data: data.length ? data : [{ day: getUtcDayKey(), value: 0 }],
+    data: data.length ? data : [{ day: getLocalDayKey(), value: 0 }],
     unit,
     domain: getYDomain(maxHours, unit),
   };

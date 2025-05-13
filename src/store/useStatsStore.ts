@@ -2,7 +2,7 @@ import { DailySession, SessionGapSummary } from '@features/stats/stats';
 
 import { Constants } from '@utils/constants';
 import { create } from 'zustand';
-import { getUtcDayKey } from '@lib/dayjs';
+import { getLocalDayKey } from '@lib/dayjs';
 
 export type DailySessionsState = {
   selectedRange: number;
@@ -65,7 +65,7 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
 
   updateDailySessions: (data) =>
     set(() => {
-      const today = getUtcDayKey();
+      const today = getLocalDayKey();
       const todayCount = data.find((d) => d.day === today)?.count ?? 0;
       return {
         dailySessions: {
@@ -79,7 +79,7 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
 
   updateSessionGaps: (data) =>
     set(() => {
-      const today = getUtcDayKey();
+      const today = getLocalDayKey();
       const todaySummary = data.find((d) => d.day === today);
       const avgSeconds = todaySummary?.avgSeconds ?? 0;
 
@@ -100,7 +100,7 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
         updated,
       ];
       const todayCount =
-        updated.day === getUtcDayKey()
+        updated.day === getLocalDayKey()
           ? updated.count
           : state.dailySessions.todayCount;
 
@@ -120,7 +120,7 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
         updated,
       ];
       const avgSeconds =
-        updated.day === getUtcDayKey()
+        updated.day === getLocalDayKey()
           ? (updated.avgSeconds ?? 0)
           : state.sessionGaps.todayGapSeconds;
 

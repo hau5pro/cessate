@@ -1,12 +1,5 @@
-import {
-  CollectionReference,
-  DocumentData,
-  WriteBatch,
-  collection,
-  getFirestore,
-  writeBatch,
-} from 'firebase/firestore';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
+import { WriteBatch, getFirestore, writeBatch } from 'firebase/firestore';
 
 import { initializeApp } from 'firebase/app';
 

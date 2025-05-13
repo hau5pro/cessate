@@ -2,7 +2,7 @@ import BaseButton from '@components/BaseButton';
 import { Box } from '@mui/material';
 import Loading from '@components/Loading';
 import { Timestamp } from 'firebase/firestore';
-import { getUtcDayKey } from '@lib/dayjs';
+import { getLocalDayKey } from '@lib/dayjs';
 import { logRelapseAndStartSession } from '@services/sessionsService';
 import { runSessionTransaction } from '@lib/firebase';
 import { useAuthStore } from '@store/useAuthStore';
@@ -11,7 +11,7 @@ import { useStatsStore } from '@store/useStatsStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 function RelapseButton() {
-  const todayKey = getUtcDayKey();
+  const todayKey = getLocalDayKey();
   const user = useAuthStore((state) => state.user);
 
   const targetDuration = useUserSettingsStore(
