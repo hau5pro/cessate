@@ -176,52 +176,66 @@ function fillMissingGaps(
   return filled;
 }
 
-function getGapUnit(maxHours: number): TimeUnit {
-  if (maxHours < 1) return 'minutes';
-  if (maxHours > 24) return 'days';
-  return 'hours';
-}
-
-function getYDomain(maxHours: number, unit: TimeUnit): [number, number] {
-  switch (unit) {
-    case 'minutes':
-      return [0, Math.ceil(maxHours * 60 + 10)];
-    case 'days':
-      return [0, maxHours / 24 + 0.5];
-    case 'hours':
-    default:
-      return [0, maxHours + 0.1];
-  }
-}
-
 export function transformSessionGaps(summaries: SessionGapSummary[]): {
   data: { day: string; value: number }[];
   unit: TimeUnit;
   domain: [number, number];
 } {
-  const rawHours = summaries.map((summary) => ({
+  const rawSeconds = summaries.map((summary) => ({
     day: summary.day,
-    hours: +(summary.avgSeconds ?? 0 / 3600).toFixed(2),
+    seconds: summary.avgSeconds ?? 0,
   }));
 
-  const maxHours = Math.max(...rawHours.map((d) => d.hours), 0);
-  const unit = getGapUnit(maxHours);
+  const maxSeconds = Math.max(...rawSeconds.map((d) => d.seconds), 0);
+  const unit = getBestTimeUnit(maxSeconds);
 
-  const data = rawHours.map(({ day, hours }) => ({
+  const data = rawSeconds.map(({ day, seconds }) => ({
     day,
-    value:
-      unit === 'minutes'
-        ? Math.round(hours * 60)
-        : unit === 'days'
-          ? +(hours / 24).toFixed(2)
-          : hours,
+    value: convertSeconds(seconds, unit),
   }));
 
   return {
     data: data.length ? data : [{ day: getLocalDayKey(), value: 0 }],
     unit,
-    domain: getYDomain(maxHours, unit),
+    domain: getYDomainForUnit(maxSeconds, unit),
   };
+}
+
+function getBestTimeUnit(seconds: number): TimeUnit {
+  if (seconds < 60) return 'seconds';
+  if (seconds < 3600) return 'minutes';
+  if (seconds < 86400) return 'hours';
+  return 'days';
+}
+
+function convertSeconds(seconds: number, unit: TimeUnit): number {
+  switch (unit) {
+    case 'minutes':
+      return Math.round(seconds / 60);
+    case 'hours':
+      return +(seconds / 3600).toFixed(2);
+    case 'days':
+      return +(seconds / 86400).toFixed(2);
+    case 'seconds':
+    default:
+      return Math.round(seconds);
+  }
+}
+
+function getYDomainForUnit(
+  maxSeconds: number,
+  unit: TimeUnit
+): [number, number] {
+  switch (unit) {
+    case 'seconds':
+      return [0, Math.ceil(maxSeconds + 5)];
+    case 'minutes':
+      return [0, Math.ceil(maxSeconds / 60 + 2)];
+    case 'hours':
+      return [0, +(maxSeconds / 3600 + 0.1).toFixed(1)];
+    case 'days':
+      return [0, +(maxSeconds / 86400 + 0.1).toFixed(1)];
+  }
 }
 
 export function formatDuration(seconds: number): {
