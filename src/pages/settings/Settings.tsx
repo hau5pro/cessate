@@ -181,11 +181,10 @@ function SettingsPage() {
         </MotionSection>
 
         <MotionSection index={2}>
-          <Box className={styles.SettingsSection}>
+          <Box className={styles.ButtonContainer}>
             <DeleteDataButton userId={user?.uid} />
             <BaseButton
-              sx={{ bgcolor: theme.palette.error.main }}
-              variant="contained"
+              sx={{ borderColor: theme.palette.error.main }}
               onClick={signOut}
               fullWidth
             >
