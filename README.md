@@ -29,6 +29,12 @@ npm install
 npm run dev
 ```
 
+## 🧪 Testing
+
+```bash
+  npm run test
+```
+
 ## 🌐 PWA Support
 
 - Optimized for mobile use
@@ -67,7 +73,3 @@ npm run dev
 
 - All session and stat data is localized to the user's timezone using Dayjs
 - UTC keys are avoided for daily summaries to ensure correct date alignment
-
-## 🧪 Testing
-
-_TBD_
