@@ -12,7 +12,6 @@ import { useStatsStore } from '@store/useStatsStore';
 import { useUserSettingsStore } from '@store/useUserSettingsStore';
 
 function RelapseButton() {
-  const todayKey = getLocalDayKey();
   const user = useAuthStore((state) => state.user);
 
   const targetDuration = useUserSettingsStore(
@@ -24,19 +23,6 @@ function RelapseButton() {
   const loading = useSessionStore((state) => state.loading);
   const setLoading = useSessionStore((state) => state.setLoading);
 
-  const todaysGapSummary = useStatsStore((state) =>
-    state.sessionGaps.data.find((d) => d.day === todayKey)
-  );
-  const updateTodaySessionGapSummary = useStatsStore(
-    (state) => state.updateTodaySessionGapSummary
-  );
-  const todaysDailySessions = useStatsStore((state) =>
-    state.dailySessions.data.find((d) => d.day === todayKey)
-  );
-  const updateTodayDailySession = useStatsStore(
-    (state) => state.updateTodayDailySession
-  );
-
   const updateHistorySession = useHistoryStore((state) => state.updateSession);
   const addToHistory = useHistoryStore((state) => state.addSession);
 
@@ -45,6 +31,16 @@ function RelapseButton() {
 
     try {
       setLoading(true);
+
+      const dayKey = getLocalDayKey(session.createdAt.toDate());
+
+      const gapSummaryForDay = useStatsStore
+        .getState()
+        .sessionGaps.data.find((d) => d.day === dayKey);
+
+      const dailySessionsForDay = useStatsStore
+        .getState()
+        .dailySessions.data.find((d) => d.day === dayKey);
 
       const {
         session: newSession,
@@ -56,21 +52,21 @@ function RelapseButton() {
           session,
           targetDuration,
           batch,
-          todaysGapSummary
+          gapSummaryForDay
         );
       });
 
-      updateTodaySessionGapSummary(gapSummary);
-      const updatedCount = (todaysDailySessions?.count ?? 0) + 1;
-      updateTodayDailySession({
-        day: todayKey,
+      useStatsStore.getState().updateTodaySessionGapSummary(gapSummary);
+
+      const updatedCount = (dailySessionsForDay?.count ?? 0) + 1;
+      useStatsStore.getState().updateTodayDailySession({
+        day: dayKey,
         count: updatedCount,
         updatedAt: Timestamp.now(),
       });
 
       updateHistorySession(previous);
       addToHistory(newSession);
-
       setCurrentSession(newSession);
     } catch (err) {
       console.error('Relapse failed:', err);
