@@ -2,7 +2,7 @@
 
 A mobile-first PWA designed to help users track and overcome habits like smoking or vaping. Built with Firebase, Zustand, and React.
 
-[Visit Website](hau5pro.github.io/cessate/)
+[Visit Website](https://hau5pro.github.io/cessate/)
 
 ## 🚀 Tech Stack
 
