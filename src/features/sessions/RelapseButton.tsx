@@ -87,6 +87,7 @@ function RelapseButton() {
       color="secondary"
       onClick={handleRelapse}
       disabled={loading}
+      data-testid="relapse-button"
     >
       <Box
         display="flex"

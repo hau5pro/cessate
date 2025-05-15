@@ -33,7 +33,12 @@ function StartSessionButton() {
   };
 
   return (
-    <BaseButton variant="contained" color="primary" onClick={handleStart}>
+    <BaseButton
+      variant="contained"
+      color="primary"
+      onClick={handleStart}
+      data-testid="start-button"
+    >
       Start Your Journey
     </BaseButton>
   );
