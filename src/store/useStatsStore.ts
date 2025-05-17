@@ -98,7 +98,7 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
       const data = [
         ...state.dailySessions.data.filter((d) => d.day !== updated.day),
         updated,
-      ];
+      ].sort((a, b) => a.day.localeCompare(b.day));
       const todayCount =
         updated.day === getLocalDayKey()
           ? updated.count
@@ -118,7 +118,7 @@ export const useStatsStore = create<StatsState & StatsActions>((set) => ({
       const data = [
         ...state.sessionGaps.data.filter((d) => d.day !== updated.day),
         updated,
-      ];
+      ].sort((a, b) => a.day.localeCompare(b.day));
       const avgSeconds =
         updated.day === getLocalDayKey()
           ? (updated.avgSeconds ?? 0)
